@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>KityMinder Editor - Powered By FEX</title>
+
+	<link href="favicon.ico" type="image/x-icon" rel="shortcut icon">
+
+	<!-- bower:css -->
+	<!-- 
+		<link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
+		<link rel="stylesheet" href="../bower_components/codemirror/lib/codemirror.css" />
+		<link rel="stylesheet" href="../bower_components/hotbox/hotbox.css" />
+		<link rel="stylesheet" href="kityminder-core/dist/kityminder.core.css">
+		<link rel="stylesheet" href="../bower_components/color-picker/dist/color-picker.min.css" />
+		<link rel="stylesheet" href="../bower_components/toastr/toastr.min.css" />
+	 -->
+	<!-- endbower -->
+
+	<!-- cdn: css -->
+	<link href="https://cdn.bootcss.com/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdn.bootcss.com/codemirror/4.8.0/codemirror.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="hotbox/hotbox.css" />
+	<link rel="stylesheet" href="kityminder-core/dist/kityminder.core.css">
+	<link rel="stylesheet" href="https://static-file.bj.bcebos.com/color-picker/color-picker.min.css">
+	<link href="https://cdn.bootcss.com/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+	<!-- endcdn -->
+
+	<link rel="stylesheet" href="../dist/kityminder.editor.min.css">
+
+	<style>
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			overflow: hidden;
+		}
+	</style>
+</head>
+
+<body ng-app="kityminderDemo" ng-controller="MainController">
+	<kityminder-editor on-init="initEditor(editor, minder)"></kityminder-editor>
+	<!-- 参数中有md -->
+	<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="initRemoteModal">
+		<!-- 参数中有md -->
+		<div class="modal-dialog modal-sm" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+					<h5 class="modal-title">加载提示</h5>
+				</div>
+				<div class="modal-body" style="font-size:16px;">检测到远程数据，要加载吗？</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
+					<button type="button" class="btn btn-success" id="initRemote">是</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<!-- bower:js -->
+
+<!-- <script src="../bower_components/jquery/dist/jquery.js"></script>
+	<script src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="../bower_components/angular/angular.js"></script>
+	<script src="../bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+	<script src="../bower_components/codemirror/lib/codemirror.js"></script>
+	<script src="../bower_components/codemirror/mode/xml/xml.js"></script>
+	<script src="../bower_components/codemirror/mode/javascript/javascript.js"></script>
+	<script src="../bower_components/codemirror/mode/css/css.js"></script>
+	<script src="../bower_components/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+	<script src="../bower_components/codemirror/mode/markdown/markdown.js"></script>
+	<script src="../bower_components/codemirror/addon/mode/overlay.js"></script>
+	<script src="../bower_components/codemirror/mode/gfm/gfm.js"></script>
+	<script src="../bower_components/angular-ui-codemirror/ui-codemirror.js"></script>
+	<script src="../bower_components/marked/lib/marked.js"></script>
+	<script src="../bower_components/kity/dist/kity.min.js"></script>
+	<script src="../bower_components/hotbox/hotbox.js"></script>
+	<script src="../bower_components/json-diff/json-diff.js"></script>
+	<script src="kityminder-core/dist/kityminder.core.min.js"></script>
+	<script src="../bower_components/color-picker/dist/color-picker.min.js"></script>
+	<script src="../bower_components/toastr/toastr.min.js"></script> -->
+
+<!-- endbower -->
+
+<!-- cdn: js -->
+<script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.bootcss.com/angular.js/1.3.20/angular.min.js"></script>
+<script src="https://cdn.bootcss.com/angular-ui-bootstrap/0.12.1/ui-bootstrap-tpls.min.js"></script>
+<script src="https://cdn.bootcss.com/codemirror/4.8.0/codemirror.min.js"></script>
+<script src="https://cdn.bootcss.com/codemirror/4.8.0/mode/xml/xml.min.js"></script>
+<script src="https://cdn.bootcss.com/codemirror/4.8.0/mode/javascript/javascript.min.js"></script>
+<script src="https://cdn.bootcss.com/codemirror/4.8.0/mode/css/css.min.js"></script>
+<script src="https://cdn.bootcss.com/codemirror/4.8.0/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdn.bootcss.com/codemirror/4.8.0/mode/markdown/markdown.js"></script>
+<script src="https://cdn.bootcss.com/codemirror/4.8.0/addon/mode/overlay.min.js"></script>
+<script src="https://cdn.bootcss.com/codemirror/4.8.0/mode/gfm/gfm.min.js"></script>
+<script src="https://cdn.bootcss.com/angular-ui-codemirror/0.2.3/ui-codemirror.min.js"></script>
+<script src="https://cdn.bootcss.com/marked/0.7.0/marked.min.js"></script>
+<script type="text/javascript" src="kity/dist/kity.min.js"></script>
+<script src="hotbox/hotbox.min.js"></script>
+<script src="json-diff/json-diff.js"></script>
+<script src="kityminder-core/dist/kityminder.core.min.js"></script>
+<script src="https://static-file.bj.bcebos.com/color-picker/color-picker.min.js"></script>
+<script src="https://cdn.bootcss.com/toastr.js/latest/js/toastr.min.js"></script>
+<!-- endcdn -->
+
+<script src="../dist/kityminder.editor.min.js"></script>
+
+
+<script>
+	!function () {
+		window.onbeforeunload = function (e) {
+			let message = "系统可能不会保存您所做的更改。";
+			e = e || window.event;
+			if (e) {
+				e.returnValue = message;
+			}
+			return message;
+		};
+		$('#initRemoteModal').on('hidden.bs.modal', function (e) {
+			$(this).remove();
+		});
+		jQuery.extend({
+			getQueryVariable: function (name) {
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if (r != null) return unescape(r[2]);
+				return null;
+			}
+		})
+	}();
+	angular.module('kityminderDemo', ['kityminderEditor'])
+		.config(function (configProvider) {
+			// configProvider.set('imageUpload', '../server/imageUpload.php');
+		})
+		.controller('MainController', function ($scope) {
+			$scope.initEditor = function (editor, minder) {
+				window.editor = editor;
+				window.minder = minder;
+				// minder.remoteLink = "https://cloudlandboy.github.io/myNote/resources/minds/";
+				minder.remoteLink = "http://127.0.0.1:5500/";
+				toastr.options = {
+					"closeButton": true,
+					"positionClass": "toast-top-center",
+					"newestOnTop": false,
+				};
+				let link = $.getQueryVariable("md");
+				if (link) {
+					if (!/^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/.test(link)) {
+						link = minder.remoteLink + link + ".json";
+					}
+					$.getJSON(link, function (data) {
+						$('#initRemoteModal').modal('show');
+						$('#initRemote').one('click', function () {
+							$('#initRemoteModal').modal('hide');
+							try {
+								minder.importJson(data)
+								minder.readOnly();
+								minder.isRemote = true;
+							} catch (e) {
+								toastr.error("出错了，不兼容的json格式！");
+							}
+						})
+					})
+				}
+			};
+		});
+
+</script>
+
+</html>

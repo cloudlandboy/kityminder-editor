@@ -18,7 +18,7 @@
     "svg"
   ],
   "license": "BSD",
-  "homepage": "https://github.com/fex-team/kityminder-editor",
+  "homepage": "https://github.com/cloudlandboy/kityminder-editor",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -44,7 +44,8 @@
     "hotbox": "~1.0.2",
     "color-picker": "~1.0.2",
     "kity": "^2.0.5",
-    "json-diff": "*"
+    "json-diff": "*",
+    "toastr": "^2.1.3"
   },
   "overrides": {
     "codemirror": {

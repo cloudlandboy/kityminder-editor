@@ -1,9 +1,9 @@
 /*!
  * ====================================================
- * kityminder-editor - v1.0.67 - 2019-02-12
+ * kityminder-editor - v1.0.67 - 2020-01-07
  * https://github.com/fex-team/kityminder-editor
  * GitHub: https://github.com/fex-team/kityminder-editor 
- * Copyright (c) 2019 ; Licensed 
+ * Copyright (c) 2020 ; Licensed 
  * ====================================================
  */
 
@@ -1408,6 +1408,27 @@ _p[14] = {
             minder.execCommand("text", "中心主题");
             // 导出给其它 Runtime 使用
             this.minder = minder;
+            //只读和可编辑
+            minder.readOnly = function() {
+                if (!this.isReadonly) {
+                    this.fire("readonly");
+                    this.isReadonly = true;
+                    $("#more-op").click();
+                }
+            };
+            minder.editable = function() {
+                if (this.isReadonly) {
+                    if (minder.isRemote) {
+                        toastr.info("远程数据请下载到本地然后加载方可编辑！");
+                        return;
+                    }
+                    editor.container.appendChild(editor.receiver.element);
+                    editor.hotbox.$container.appendChild(editor.hotbox.$element);
+                    this.enable();
+                    this.setStatus("normal", true);
+                    this.isReadonly = false;
+                }
+            };
         }
         return module.exports = MinderRuntime;
     }
@@ -1461,7 +1482,7 @@ _p[15] = {
                 key: "Alt + V",
                 enable: function() {
                     var selectedNodes = minder.getSelectedNodes();
-                    return selectedNodes.length == 1;
+                    return selectedNodes.length == 1 && !minder.isReadonly;
                 },
                 action: importNodeData,
                 next: "idle"
@@ -2115,7 +2136,7 @@ angular.module('kityminderEditor').run(['$templateCache', function($templateCach
 
 
   $templateCache.put('ui/directive/kityminderEditor/kityminderEditor.html',
-    "<div class=\"minder-editor-container\"><div class=\"top-tab\" top-tab=\"minder\" editor=\"editor\" ng-if=\"minder\"></div><div search-box minder=\"minder\" ng-if=\"minder\"></div><div class=\"minder-editor\"></div><div class=\"km-note\" note-editor minder=\"minder\" ng-if=\"minder\"></div><div class=\"note-previewer\" note-previewer ng-if=\"minder\"></div><div class=\"navigator\" navigator minder=\"minder\" ng-if=\"minder\"></div></div>"
+    "<div class=\"minder-editor-container\"><div class=\"top-tab\" top-tab=\"minder\" id=\"top-tab\" editor=\"editor\" ng-if=\"minder\"></div><div search-box minder=\"minder\" ng-if=\"minder\"></div><div class=\"minder-editor\" id=\"minder-editor\"></div><div class=\"km-note\" note-editor minder=\"minder\" ng-if=\"minder\"></div><div class=\"note-previewer\" note-previewer ng-if=\"minder\"></div><div class=\"navigator\" navigator minder=\"minder\" ng-if=\"minder\"></div></div>"
   );
 
 
@@ -2133,7 +2154,7 @@ angular.module('kityminderEditor').run(['$templateCache', function($templateCach
     "<div class=\"nav-bar\"><div class=\"nav-btn zoom-in\" ng-click=\"minder.execCommand('zoomIn')\" title=\"{{ 'zoom-in' | lang : 'ui' }}\" ng-class=\"{ 'active' : getZoomRadio(zoom) == 0 }\"><div class=\"icon\"></div></div><div class=\"zoom-pan\"><div class=\"origin\" ng-style=\"{'transform': 'translate(0, ' + getHeight(100) + 'px)'}\" ng-click=\"minder.execCommand('zoom', 100);\"></div><div class=\"indicator\" ng-style=\"{\n" +
     "             'transform': 'translate(0, ' + getHeight(zoom) + 'px)',\n" +
     "             'transition': 'transform 200ms'\n" +
-    "             }\"></div></div><div class=\"nav-btn zoom-out\" ng-click=\"minder.execCommand('zoomOut')\" title=\"{{ 'zoom-out' | lang : 'ui' }}\" ng-class=\"{ 'active' : getZoomRadio(zoom) == 1 }\"><div class=\"icon\"></div></div><div class=\"nav-btn hand\" ng-click=\"minder.execCommand('hand')\" title=\"{{ 'hand' | lang : 'ui' }}\" ng-class=\"{ 'active' : minder.queryCommandState('hand') == 1 }\"><div class=\"icon\"></div></div><div class=\"nav-btn camera\" ng-click=\"minder.execCommand('camera', minder.getRoot(), 600);\" title=\"{{ 'camera' | lang : 'ui' }}\"><div class=\"icon\"></div></div><div class=\"nav-btn nav-trigger\" ng-class=\"{'active' : isNavOpen}\" ng-click=\"toggleNavOpen()\" title=\"{{ 'navigator' | lang : 'ui' }}\"><div class=\"icon\"></div></div></div><div class=\"nav-previewer\" ng-show=\"isNavOpen\"></div>"
+    "             }\"></div></div><div class=\"nav-btn zoom-out\" ng-click=\"minder.execCommand('zoomOut')\" title=\"{{ 'zoom-out' | lang : 'ui' }}\" ng-class=\"{ 'active' : getZoomRadio(zoom) == 1 }\"><div class=\"icon\"></div></div><div class=\"nav-btn hand\" ng-click=\"minder.execCommand('hand')\" title=\"{{ 'hand' | lang : 'ui' }}\" ng-class=\"{ 'active' : minder.queryCommandState('hand') == 1 }\"><div class=\"icon\"></div></div><div class=\"nav-btn camera\" ng-click=\"minder.execCommand('camera', minder.getRoot(), 600);\" title=\"{{ 'camera' | lang : 'ui' }}\"><div class=\"icon\"></div></div><div class=\"nav-btn nav-trigger\" ng-class=\"{'active' : isNavOpen}\" ng-click=\"toggleNavOpen()\" title=\"{{ 'navigator' | lang : 'ui' }}\"><div class=\"icon\"></div></div><div class=\"nav-btn hidden\" ng-click=\"showTopMenu()\" id=\"showMenuBtn\"><svg t=\"1578220189179\" viewbox=\"0 0 1024 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" p-id=\"1914\" width=\"25\" height=\"25\"><path d=\"M383.068024 469.026256l-171.915441 0c-47.39238 0-85.957721-38.533618-85.957721-85.957721l0-171.915441c0-47.39238 38.566364-85.957721 85.957721-85.957721l171.915441 0c47.40773 0 85.957721 38.566364 85.957721 85.957721l0 171.915441C469.025745 430.492638 430.475753 469.026256 383.068024 469.026256L383.068024 469.026256zM426.046884 211.153094c0-23.695678-19.283182-42.97886-42.97886-42.97886l-171.915441 0c-23.680329 0-42.97886 19.283182-42.97886 42.97886l0 171.915441c0 23.712051 19.298532 42.97886 42.97886 42.97886l171.915441 0c23.695678 0 42.97886-19.266809 42.97886-42.97886L426.046884 211.153094 426.046884 211.153094zM383.068024 898.798487l-171.915441 0c-47.39238 0-85.957721-38.518269-85.957721-85.941348l0-171.915441c0-47.39238 38.566364-85.957721 85.957721-85.957721l171.915441 0c47.40773 0 85.957721 38.566364 85.957721 85.957721l0 171.915441C469.025745 860.281241 430.475753 898.798487 383.068024 898.798487L383.068024 898.798487zM426.046884 640.941698c0-23.695678-19.283182-42.97886-42.97886-42.97886l-171.915441 0c-23.680329 0-42.97886 19.283182-42.97886 42.97886l0 171.915441c0 23.712051 19.298532 42.97886 42.97886 42.97886l171.915441 0c23.695678 0 42.97886-19.266809 42.97886-42.97886L426.046884 640.941698 426.046884 640.941698zM877.35664 748.516762c-11.879562 0-21.521153-9.577123-21.521153-21.457708l0-86.117356c0-23.695678-19.283182-42.97886-42.97886-42.97886l-171.915441 0c-23.680329 0-42.97886 19.283182-42.97886 42.97886l0 171.915441c0 23.712051 19.298532 42.97886 42.97886 42.97886l86.117356 0c11.864212 0 21.48943 9.657964 21.48943 21.521153 0 11.83249-9.625218 21.441335-21.48943 21.441335L640.941186 898.798487c-47.39238 0-85.957721-38.518269-85.957721-85.941348l0-171.915441c0-47.39238 38.566364-85.957721 85.957721-85.957721l171.915441 0c47.40773 0 85.957721 38.566364 85.957721 85.957721l0 86.117356C898.814348 738.939639 889.188106 748.516762 877.35664 748.516762L877.35664 748.516762zM812.856627 469.026256l-171.915441 0c-47.39238 0-85.957721-38.533618-85.957721-85.957721l0-171.915441c0-47.39238 38.566364-85.957721 85.957721-85.957721l171.915441 0c47.40773 0 85.957721 38.566364 85.957721 85.957721l0 171.915441C898.814348 430.492638 860.264357 469.026256 812.856627 469.026256L812.856627 469.026256zM855.835488 211.153094c0-23.695678-19.283182-42.97886-42.97886-42.97886l-171.915441 0c-23.680329 0-42.97886 19.283182-42.97886 42.97886l0 171.915441c0 23.712051 19.298532 42.97886 42.97886 42.97886l171.915441 0c23.695678 0 42.97886-19.266809 42.97886-42.97886L855.835488 211.153094 855.835488 211.153094z\" p-id=\"1915\" fill=\"#FFFFFF\"></path></svg></div></div><div class=\"nav-previewer\" ng-show=\"isNavOpen\"></div>"
   );
 
 
@@ -2161,6 +2182,11 @@ angular.module('kityminderEditor').run(['$templateCache', function($templateCach
 
   $templateCache.put('ui/directive/operation/operation.html',
     "<div class=\"km-btn-group operation-group\"><div class=\"km-btn-item edit-node\" ng-disabled=\"minder.queryCommandState('text') === -1\" ng-click=\"minder.queryCommandState('text') === -1 || editNode()\" title=\"{{ 'editnode' | lang:'ui/command' }}\"><i class=\"km-btn-icon\"></i> <span class=\"km-btn-caption\">{{ 'editnode' | lang:'ui/command' }}</span></div><div class=\"km-btn-item remove-node\" ng-disabled=\"minder.queryCommandState('RemoveNode') === -1\" ng-click=\"minder.queryCommandState('RemoveNode') === -1 || minder.execCommand('RemoveNode');\" title=\"{{ 'removenode' | lang:'ui/command' }}\"><i class=\"km-btn-icon\"></i> <span class=\"km-btn-caption\">{{ 'removenode' | lang:'ui/command' }}</span></div></div>"
+  );
+
+
+  $templateCache.put('ui/directive/other/other.html',
+    "<div class=\"other-btn\" dropdown is-open=\"isopen\" style=\"padding-top:16px\"><button type=\"button\" class=\"btn btn-sm btn-primary clboy-btn\" ng-click=\"minder.execCommand('ExpandToLevel', 9999)\">{{ 'expandAll' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-secondary clboy-btn\" ng-click=\"minder.execCommand('ExpandToLevel', 1)\">{{ 'closeAll' | lang:'ui/other' }}</button><div class=\"btn-group\"><button type=\"button\" class=\"btn btn-sm btn-success dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{{ 'out' | lang:'ui/other' }}<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><li><a href=\"javascript:;\" ng-click=\"download('json','json')\">{{ 'downloadJSON' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('png','png')\">{{ 'downloadPng' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('text','txt')\">{{ 'downloadText' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('markdown','md')\">{{ 'downloadMarkdown' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('svg','svg')\">{{ 'downloadSvg' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('svg','html')\">{{ 'downloadHtml' | lang:'ui/other' }}</a></li></ul></div><div class=\"btn-group\"><button type=\"button\" class=\"btn btn-sm btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{{ 'in' | lang:'ui/other' }}<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><li><a href=\"javascript:;\" ng-click=\"loadData('local')\">{{ 'localData' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"loadData('remote')\">{{ 'remoteData' | lang:'ui/other' }}</a></li></ul></div><button type=\"button\" class=\"btn btn-sm btn-danger clboy-btn\" ng-click=\"createNewConfirm()\">{{ 'createNew' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-dark clboy-btn\" ng-click=\"closeTop()\">{{ 'closeTop' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-dark clboy-btn\" ng-disabled=\"minder.isReadonly\" ng-click=\"minder.readOnly()\">{{ 'readOnly' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-primary clboy-btn\" ng-disabled=\"!minder.isReadonly\" ng-click=\"minder.editable()\">{{ 'editable' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn- clboy-btn\" ng-click=\"viewModel()\">{{ 'view' | lang:'ui/other' }}</button> <input type=\"file\" id=\"localFile\" style=\"display: none\"></div><div class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\" id=\"createNewModal\"><div class=\"modal-dialog modal-sm\" role=\"document\"><div class=\"modal-content\"><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><h5 class=\"modal-title\">新建提示</h5></div><div class=\"modal-body\" style=\"font-size:16px\">你是要丢弃当前数据吗？</div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">否</button> <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\" ng-click=\"createNew()\">是</button></div></div></div></div>"
   );
 
 
@@ -2210,7 +2236,7 @@ angular.module('kityminderEditor').run(['$templateCache', function($templateCach
 
 
   $templateCache.put('ui/directive/topTab/topTab.html',
-    "<tabset><tab heading=\"{{ 'idea' | lang: 'ui/tabs'; }}\" ng-click=\"toggleTopTab('idea')\" select=\"setCurTab('idea')\"><undo-redo editor=\"editor\"></undo-redo><append-node minder=\"minder\"></append-node><arrange minder=\"minder\"></arrange><operation minder=\"minder\"></operation><hyper-link minder=\"minder\"></hyper-link><image-btn minder=\"minder\"></image-btn><note-btn minder=\"minder\"></note-btn><priority-editor minder=\"minder\"></priority-editor><progress-editor minder=\"minder\"></progress-editor><resource-editor minder=\"minder\"></resource-editor></tab><tab heading=\"{{ 'appearence' | lang: 'ui/tabs'; }}\" ng-click=\"toggleTopTab('appearance')\" select=\"setCurTab('appearance')\"><template-list minder=\"minder\" class=\"inline-directive\"></template-list><theme-list minder=\"minder\"></theme-list><layout minder=\"minder\" class=\"inline-directive\"></layout><style-operator minder=\"minder\" class=\"inline-directive\"></style-operator><font-operator minder=\"minder\" class=\"inline-directive\"></font-operator></tab><tab heading=\"{{ 'view' | lang: 'ui/tabs'; }}\" ng-click=\"toggleTopTab('view')\" select=\"setCurTab('view')\"><expand-level minder=\"minder\"></expand-level><select-all minder=\"minder\"></select-all><search-btn minder=\"minder\"></search-btn></tab></tabset>"
+    "<tabset><tab ng-hide=\"minder.isReadonly\" heading=\"{{ 'idea' | lang: 'ui/tabs'; }}\" ng-click=\"toggleTopTab('idea')\" select=\"setCurTab('idea')\"><undo-redo editor=\"editor\"></undo-redo><append-node minder=\"minder\"></append-node><arrange minder=\"minder\"></arrange><operation minder=\"minder\"></operation><hyper-link minder=\"minder\"></hyper-link><image-btn minder=\"minder\"></image-btn><note-btn minder=\"minder\"></note-btn><priority-editor minder=\"minder\"></priority-editor><progress-editor minder=\"minder\"></progress-editor><resource-editor minder=\"minder\"></resource-editor></tab><tab ng-hide=\"minder.isReadonly\" heading=\"{{ 'appearence' | lang: 'ui/tabs'; }}\" ng-click=\"toggleTopTab('appearance')\" select=\"setCurTab('appearance')\"><template-list minder=\"minder\" class=\"inline-directive\"></template-list><theme-list minder=\"minder\"></theme-list><layout minder=\"minder\" class=\"inline-directive\"></layout><style-operator minder=\"minder\" class=\"inline-directive\"></style-operator><font-operator minder=\"minder\" class=\"inline-directive\"></font-operator></tab><tab heading=\"{{ 'view' | lang: 'ui/tabs'; }}\" ng-click=\"toggleTopTab('view')\" select=\"setCurTab('view')\"><expand-level minder=\"minder\"></expand-level><select-all minder=\"minder\"></select-all><search-btn minder=\"minder\"></search-btn></tab><tab heading=\"{{ 'title' | lang: 'ui/other'; }}\" id=\"more-op\" ng-click=\"toggleTopTab('other')\" select=\"setCurTab('other')\"><other minder=\"minder\"></other></tab></tabset>"
   );
 
 
@@ -2231,7 +2257,7 @@ angular.module('kityminderEditor').run(['$templateCache', function($templateCach
 
 
   $templateCache.put('ui/dialog/image/image.tpl.html',
-    "<div class=\"modal-header\"><h3 class=\"modal-title\">图片</h3></div><div class=\"modal-body\"><tabset><tab heading=\"图片搜索\"><form class=\"form-inline\"><div class=\"form-group\"><label for=\"search-keyword\">关键词：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.searchKeyword2\" id=\"search-keyword\" placeholder=\"请输入搜索的关键词\"></div><button class=\"btn btn-primary\" ng-click=\"searchImage()\">百度一下</button></form><div class=\"search-result\" id=\"search-result\"><ul><li ng-repeat=\"image in list\" id=\"{{ 'img-item' + $index }}\" ng-class=\"{'selected' : isSelected}\" ng-click=\"selectImage($event)\"><img id=\"{{ 'img-' + $index }}\" ng-src=\"{{ image.src || '' }}\" alt=\"{{ image.title }}\" onerror=\"this.parentNode.removeChild(this)\"> <span>{{ image.title }}</span></li></ul></div></tab><tab heading=\"外链图片\"><form><div class=\"form-group\" ng-class=\"{true: 'has-success', false: 'has-error'}[urlPassed]\"><label for=\"image-url\">链接地址：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.url\" ng-blur=\"urlPassed = data.R_URL.test(data.url)\" ng-focus=\"this.value = data.url\" ng-keydown=\"shortCut($event)\" id=\"image-url\" placeholder=\"必填：以 http(s):// 开头\"></div><div class=\"form-group\" ng-class=\"{'has-success' : titlePassed}\"><label for=\"image-title\">提示文本：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.title\" ng-blur=\"titlePassed = true\" id=\"image-title\" placeholder=\"选填：鼠标在图片上悬停时提示的文本\"></div><div class=\"form-group\"><label for=\"image-preview\">图片预览：</label><img class=\"image-preview\" id=\"image-preview\" ng-src=\"{{ data.url }}\" alt=\"{{ data.title }}\"></div></form></tab><tab heading=\"上传图片\" active=\"true\"><form><div class=\"form-group\"><input type=\"file\" name=\"upload-image\" id=\"upload-image\" class=\"upload-image\" accept=\".jpg,.JPG,jpeg,JPEG,.png,.PNG,.gif,.GIF\" onchange=\"angular.element(this).scope().uploadImage()\"><label for=\"upload-image\" class=\"btn btn-primary\"><span>选择文件&hellip;</span></label></div><div class=\"form-group\" ng-class=\"{'has-success' : titlePassed}\"><label for=\"image-title\">提示文本：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.title\" ng-blur=\"titlePassed = true\" id=\"image-title\" placeholder=\"选填：鼠标在图片上悬停时提示的文本\"></div><div class=\"form-group\"><label for=\"image-preview\">图片预览：</label><img class=\"image-preview\" id=\"image-preview\" ng-src=\"{{ data.url }}\" title=\"{{ data.title }}\" alt=\"{{ data.title }}\"></div></form></tab></tabset></div><div class=\"modal-footer\"><button class=\"btn btn-primary\" ng-click=\"ok()\">确定</button> <button class=\"btn btn-warning\" ng-click=\"cancel()\">取消</button></div>"
+    "<div class=\"modal-header\"><h3 class=\"modal-title\">图片</h3></div><div class=\"modal-body\"><tabset><tab heading=\"图片搜索\"><form class=\"form-inline\"><div class=\"form-group\"><label for=\"search-keyword\">关键词：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.searchKeyword2\" id=\"search-keyword\" placeholder=\"请输入搜索的关键词\"></div><button class=\"btn btn-primary\" ng-click=\"searchImage()\">百度一下</button></form><div class=\"search-result\" id=\"search-result\"><ul><li ng-repeat=\"image in list\" id=\"{{ 'img-item' + $index }}\" ng-class=\"{'selected' : isSelected}\" ng-click=\"selectImage($event)\"><img id=\"{{ 'img-' + $index }}\" ng-src=\"{{ image.src || '' }}\" alt=\"{{ image.title }}\" onerror=\"this.parentNode.removeChild(this)\"> <span>{{ image.title }}</span></li></ul></div></tab><tab heading=\"外链图片\" active=\"true\"><form><div class=\"form-group\" ng-class=\"{true: 'has-success', false: 'has-error'}[urlPassed]\"><label for=\"image-url\">链接地址：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.url\" ng-blur=\"urlPassed = data.R_URL.test(data.url)\" ng-focus=\"this.value = data.url\" ng-keydown=\"shortCut($event)\" id=\"image-url\" placeholder=\"必填：以 http(s):// 开头\"></div><div class=\"form-group\" ng-class=\"{'has-success' : titlePassed}\"><label for=\"image-title\">提示文本：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.title\" ng-blur=\"titlePassed = true\" id=\"image-title\" placeholder=\"选填：鼠标在图片上悬停时提示的文本\"></div><div class=\"form-group\"><label for=\"image-preview\">图片预览：</label><img class=\"image-preview\" id=\"image-preview\" ng-src=\"{{ data.url }}\" alt=\"{{ data.title }}\"></div></form></tab><tab heading=\"上传图片\"><div class=\"alert alert-success\" role=\"alert\">可以把图片上传到图床，然后使用外链图片</div></tab></tabset></div><div class=\"modal-footer\"><button class=\"btn btn-primary\" ng-click=\"ok()\">确定</button> <button class=\"btn btn-warning\" ng-click=\"cancel()\">取消</button></div>"
   );
 
 }]);
@@ -2317,7 +2343,7 @@ angular.module('kityminderEditor')
 		}
 	});
 angular.module('kityminderEditor')
-	.service('lang.zh-cn', function() {
+	.service('lang.zh-cn', function () {
 		return {
 			'zh-cn': {
 				'template': {
@@ -2347,7 +2373,7 @@ angular.module('kityminderEditor')
 					'fresh-blue-compat': '紧凑蓝',
 					'fresh-purple-compat': '紧凑紫',
 					'fresh-pink-compat': '紧凑粉',
-					'tianpan':'经典天盘',
+					'tianpan': '经典天盘',
 					'tianpan-compact': '紧凑天盘'
 				},
 				'maintopic': '中心主题',
@@ -2477,7 +2503,7 @@ angular.module('kityminderEditor')
 
 					'command': {
 						'appendsiblingnode': '插入同级主题',
-                        'appendparentnode': '插入上级主题',
+						'appendparentnode': '插入上级主题',
 						'appendchildnode': '插入下级主题',
 						'removenode': '删除',
 						'editnode': '编辑',
@@ -2495,7 +2521,7 @@ angular.module('kityminderEditor')
 						'outline': '大纲'
 					},
 
-					'search':'搜索',
+					'search': '搜索',
 
 					'expandtoleaf': '展开',
 
@@ -2507,7 +2533,30 @@ angular.module('kityminderEditor')
 					'tabs': {
 						'idea': '思路',
 						'appearence': '外观',
-						'view': '视图'
+						'view': '视图',
+						'other': '其他',
+					},
+					"other": {
+						'title': '更多...',
+						'out': '导出',
+						'in': '导入',
+						'downloadJSON': 'JSON数据',
+						'downloadPng': 'PNG图片',
+						'downloadText': 'Text文本',
+						'downloadMarkdown': 'Markdown格式',
+						'downloadSvg': 'SVG矢量图',
+						'downloadHtml': 'HTML+SVG',
+						'expandAll': '展开全部',
+						'closeAll': '收起全部',
+						'localData': '本地JSON数据',
+						'localText': '本地Text数据',
+						'remoteData': '远程JSON数据',
+						'createNew': '新建',
+						'help': '帮助',
+						'closeTop': '关闭顶部菜单',
+						'readOnly': '只读模式',
+						'editable': '编辑模式',
+						'view': '演示模式'
 					},
 
 					'quickvisit': {
@@ -2647,9 +2696,9 @@ angular.module('kityminderEditor')
 					'link': '链接',
 					'image': '图片',
 					'note': '备注',
-                    'insertlink': '插入链接',
-                    'insertimage': '插入图片',
-                    'insertnote': '插入备注',
+					'insertlink': '插入链接',
+					'insertimage': '插入图片',
+					'insertnote': '插入备注',
 					'removelink': '移除已有链接',
 					'removeimage': '移除已有图片',
 					'removenote': '移除已有备注',
@@ -2685,7 +2734,7 @@ angular.module('kityminderEditor')
 					'selectsiblings': '选择兄弟节点',
 					'selectlevel': '选择同级节点',
 					'selectpath': '选择路径',
-					'selecttree': '选择子树'
+					'selecttree': '选择子树',
 				},
 				'popupcolor': {
 					'clearColor': '清空颜色',
@@ -3647,19 +3696,19 @@ angular.module('kityminderEditor')
  *
  * @copyright: Baidu FEX, 2015 */
 angular.module('kityminderEditor')
-    .directive('navigator', ['memory', 'config', function(memory, config) {
+    .directive('navigator', ['memory', 'config', function (memory, config) {
         return {
             restrict: 'A',
             templateUrl: 'ui/directive/navigator/navigator.html',
             scope: {
                 minder: '='
             },
-            link: function(scope) {
-                minder.setDefaultOptions({zoom: config.get('zoom')});
+            link: function (scope) {
+                minder.setDefaultOptions({ zoom: config.get('zoom') });
 
                 scope.isNavOpen = !memory.get('navigator-hidden');
 
-                scope.getZoomRadio = function(value) {
+                scope.getZoomRadio = function (value) {
                     var zoomStack = minder.getOption('zoom');
                     var minValue = zoomStack[0];
                     var maxValue = zoomStack[zoomStack.length - 1];
@@ -3668,21 +3717,29 @@ angular.module('kityminderEditor')
                     return (1 - (value - minValue) / valueRange);
                 };
 
-                scope.getHeight = function(value) {
+                scope.getHeight = function (value) {
                     var totalHeight = $('.zoom-pan').height();
 
                     return scope.getZoomRadio(value) * totalHeight;
                 };
 
+                scope.showTopMenu = function () {
+                    $('#showMenuBtn').addClass('hidden');
+                    $('#top-tab').slideDown();
+                    $(window.editor.container).animate({
+                        top: window.editor.lastTop + "px"
+                    });
+                }
+
                 // 初始的缩放倍数
                 scope.zoom = 100;
 
                 // 发生缩放事件时
-                minder.on('zoom', function(e) {
+                minder.on('zoom', function (e) {
                     scope.zoom = e.zoom;
                 });
 
-                scope.toggleNavOpen = function() {
+                scope.toggleNavOpen = function () {
                     scope.isNavOpen = !scope.isNavOpen;
                     memory.set('navigator-hidden', !scope.isNavOpen);
 
@@ -3690,17 +3747,17 @@ angular.module('kityminderEditor')
                         bind();
                         updateContentView();
                         updateVisibleView();
-                    } else{
+                    } else {
                         unbind();
                     }
                 };
 
-                setTimeout(function() {
+                setTimeout(function () {
                     if (scope.isNavOpen) {
                         bind();
                         updateContentView();
                         updateVisibleView();
-                    } else{
+                    } else {
                         unbind();
                     }
                 }, 0);
@@ -3743,7 +3800,7 @@ angular.module('kityminderEditor')
                 var pathHandler = getPathHandler(minder.getTheme());
 
                 // 主题切换事件
-                minder.on('themechange', function(e) {
+                minder.on('themechange', function (e) {
                     pathHandler = getPathHandler(e.theme);
                 });
 
@@ -3751,14 +3808,14 @@ angular.module('kityminderEditor')
                     switch (theme) {
                         case "tianpan":
                         case "tianpan-compact":
-                            return function(nodePathData, x, y, width, height) {
+                            return function (nodePathData, x, y, width, height) {
                                 var r = width >> 1;
                                 nodePathData.push('M', x, y + r,
                                     'a', r, r, 0, 1, 1, 0, 0.01,
                                     'z');
                             }
                         default: {
-                            return function(nodePathData, x, y, width, height) {
+                            return function (nodePathData, x, y, width, height) {
                                 nodePathData.push('M', x, y,
                                     'h', width, 'v', height,
                                     'h', -width, 'z');
@@ -3786,19 +3843,19 @@ angular.module('kityminderEditor')
 
                     var dragging = false;
 
-                    paper.on('mousedown', function(e) {
+                    paper.on('mousedown', function (e) {
                         dragging = true;
                         moveView(e.getPosition('top'), 200);
                         $previewNavigator.addClass('grab');
                     });
 
-                    paper.on('mousemove', function(e) {
+                    paper.on('mousemove', function (e) {
                         if (dragging) {
                             moveView(e.getPosition('top'));
                         }
                     });
 
-                    $(window).on('mouseup', function() {
+                    $(window).on('mouseup', function () {
                         dragging = false;
                         $previewNavigator.removeClass('grab');
                     });
@@ -3821,7 +3878,7 @@ angular.module('kityminderEditor')
                     var nodePathData = [];
                     var connectionThumbData = [];
 
-                    minder.getRoot().traverse(function(node) {
+                    minder.getRoot().traverse(function (node) {
                         var box = node.getLayoutBox();
                         pathHandler(nodePathData, box.x, box.y, box.width, box.height);
                         if (node.getConnection() && node.parent && node.parent.isExpanded()) {
@@ -4068,6 +4125,146 @@ angular.module('kityminderEditor')
 
                 }
 
+            }
+        }
+    });
+angular.module('kityminderEditor')
+    .directive('other', function () {
+        return {
+            templateUrl: 'ui/directive/other/other.html',
+            scope: {
+                minder: '='
+            },
+            link: function (scope) {
+                scope.downLink = $('<a class="hidden" id="downLink"></a>')[0];
+                $(document.body).append(scope.downLink);
+                function fullScreen(el) {
+                    var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen,
+                        wscript;
+
+                    if (typeof rfs != "undefined" && rfs) {
+                        rfs.call(el);
+                        return;
+                    }
+
+                    if (typeof window.ActiveXObject != "undefined") {
+                        wscript = new ActiveXObject("WScript.Shell");
+                        if (wscript) {
+                            wscript.SendKeys("{F11}");
+                        }
+                    }
+                };
+                scope.viewModel = function () {
+                    fullScreen(document.body);
+                    this.closeTop()
+                };
+                scope.download = function (fm, ext) {
+
+                    editor.minder.exportData(fm).then(function (data) {
+                        var fileName = minder.getRoot().data.text;
+                        var blob;
+                        if (fm == 'png') {
+                            blob = base64ToBlob(data);
+                        } else if (fm == 'json') {
+                            blob = new Blob([JSON.stringify(data)]);
+                        } else if (ext == 'html') {
+                            var a = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge">';
+                            var b = '<title>' + fileName + '</title></head><body>' + data + '</body></html>';
+                            blob = new Blob([a + b]);
+                        } else {
+                            blob = new Blob([data]);
+                        }
+                        fileName = fileName.replace(fileName[0], fileName[0].toLowerCase()) + '.' + ext;
+                        downloadFile(fileName, blob)
+                    });
+                };
+                scope.loadData = function (type) {
+                    if (type == 'local') {
+                        scope.localFile.click();
+                    } else if (type == 'remote') {
+                        toastr.info('暂时不支持');
+                    }
+                }
+                scope.localFile = $('#localFile')[0];
+                scope.localFile.onchange = function () {
+                    var file = this.files[0];
+                    var fileName = file.name.split('.');
+                    fileName = fileName[fileName.length - 1];
+                    if (!(fileName == 'json')) {
+                        toastr.error("不是.json文件！");
+                        return;
+                    }
+                    var fileReader = new FileReader();
+                    fileReader.readAsText(file);
+                    fileReader.onload = function () {
+                        try {
+                            scope.minder.importJson(JSON.parse(fileReader.result))
+                            minder.isRemote = false;
+                            minder.editable();
+                        } catch (e) {
+                            toastr.error("出错了，不兼容的json格式！");
+                        }
+                    }
+                };
+                scope.closeTop = function () {
+                    var container = window.editor.container;
+                    $('#top-tab').slideUp();
+                    window.editor.lastTop = container.offsetTop;
+                    $(container).animate({
+                        top: '0px'
+                    });
+                    $('#showMenuBtn').removeClass('hidden');
+                };
+                scope.createNew = function () {
+                    var data = new kityminder.Node().getData();
+                    data.text = "NEW";
+                    var mind = {
+                        "template": scope.minder.getTemplate(),
+                        "theme": scope.minder.getTheme(),
+                        "version": kityminder.version,
+                        "root": {
+                            "children": [],
+                            "data": data
+                        }
+                    };
+                    scope.minder.importJson(mind);
+                    minder.isRemote = false;
+                    minder.editable();
+                };
+                scope.createNewConfirm = function () {
+                    $('#createNewModal').modal('show');
+                }
+
+                function downloadFile(fileName, blob) {
+                    scope.downLink.download = fileName;
+                    scope.downLink.href = URL.createObjectURL(blob);
+                    scope.downLink.click()
+                }
+                //base64转blob
+                window.base64ToBlob = function (code) {
+                    var parts = code.split(';base64,');
+                    var contentType = parts[0].split(':')[1];
+                    var raw = window.atob(parts[1]);
+                    var rawLength = raw.length;
+
+                    var uInt8Array = new Uint8Array(rawLength);
+
+                    for (var i = 0; i < rawLength; ++i) {
+                        uInt8Array[i] = raw.charCodeAt(i);
+                    }
+                    return new Blob([uInt8Array], { type: contentType });
+                }
+
+                window.getBase64Image = function (img) {
+                    var canvas = document.createElement("canvas");
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, img.width, img.height);
+                    var ext = img.src.substring(img.src.lastIndexOf(".") + 1).toLowerCase();
+                    var dataUrl = canvas.toDataURL("images/" + ext);
+                    return dataUrl;
+                };
             }
         }
     });
@@ -4559,85 +4756,84 @@ angular.module('kityminderEditor')
 		}
 	});
 angular.module('kityminderEditor')
-    .directive('topTab', function() {
-       return {
-           restrict: 'A',
-           templateUrl: 'ui/directive/topTab/topTab.html',
-           scope: {
-               minder: '=topTab',
-               editor: '='
-           },
-           link: function(scope) {
+    .directive('topTab', function () {
+        return {
+            restrict: 'A',
+            templateUrl: 'ui/directive/topTab/topTab.html',
+            scope: {
+                minder: '=topTab',
+                editor: '='
+            },
+            link: function (scope) {
 
-               /*
-               *
-               * 用户选择一个新的选项卡会执行 setCurTab 和 foldTopTab 两个函数
-               * 用户点击原来的选项卡会执行 foldTopTop 一个函数
-               *
-               * 也就是每次选择新的选项卡都会执行 setCurTab，初始化的时候也会执行 setCurTab 函数
-               * 因此用 executedCurTab 记录是否已经执行了 setCurTab 函数
-               * 用 isInit 记录是否是初始化的状态，在任意一个函数时候 isInit 设置为 false
-               * 用 isOpen 记录是否打开了 topTab
-               *
-               * 因此用到了三个 mutex
-               * */
-               var executedCurTab = false;
-               var isInit = true;
-               var isOpen = true;
+                /*
+                *
+                * 用户选择一个新的选项卡会执行 setCurTab 和 foldTopTab 两个函数
+                * 用户点击原来的选项卡会执行 foldTopTop 一个函数
+                *
+                * 也就是每次选择新的选项卡都会执行 setCurTab，初始化的时候也会执行 setCurTab 函数
+                * 因此用 executedCurTab 记录是否已经执行了 setCurTab 函数
+                * 用 isInit 记录是否是初始化的状态，在任意一个函数时候 isInit 设置为 false
+                * 用 isOpen 记录是否打开了 topTab
+                *
+                * 因此用到了三个 mutex
+                * */
+                var executedCurTab = false;
+                var isInit = true;
+                var isOpen = true;
 
-               scope.setCurTab = function(tabName) {
-                   setTimeout(function() {
-                       //console.log('set cur tab to : ' + tabName);
-                       executedCurTab = true;
-                       //isOpen = false;
-                       if (tabName != 'idea') {
-                           isInit = false;
-                       }
-                   });
+                scope.setCurTab = function (tabName) {
+                    setTimeout(function () {
+                        //console.log('set cur tab to : ' + tabName);
+                        executedCurTab = true;
+                        //isOpen = false;
+                        if (tabName != 'idea') {
+                            isInit = false;
+                        }
+                    });
                 };
 
-               scope.toggleTopTab = function() {
-                   setTimeout(function() {
-                       if(!executedCurTab || isInit) {
-                           isInit = false;
+                scope.toggleTopTab = function () {
+                    setTimeout(function () {
+                        if (!executedCurTab || isInit) {
+                            isInit = false;
 
-                           isOpen ? closeTopTab(): openTopTab();
-                           isOpen = !isOpen;
-                       }
+                            isOpen ? closeTopTab() : openTopTab();
+                            isOpen = !isOpen;
+                        }
 
-                       executedCurTab = false;
-                   });
-               };
+                        executedCurTab = false;
+                    });
+                };
+                function closeTopTab() {
+                    var $tabContent = $('.tab-content');
+                    var $minderEditor = $('.minder-editor');
 
-               function closeTopTab() {
-                   var $tabContent = $('.tab-content');
-                   var $minderEditor = $('.minder-editor');
+                    $tabContent.animate({
+                        height: 0,
+                        display: 'none'
+                    });
 
-                   $tabContent.animate({
-                       height: 0,
-                       display: 'none'
-                   });
+                    $minderEditor.animate({
+                        top: '32px'
+                    });
+                }
 
-                   $minderEditor.animate({
-                      top: '32px'
-                   });
-               }
+                function openTopTab() {
+                    var $tabContent = $('.tab-content');
+                    var $minderEditor = $('.minder-editor');
 
-               function openTopTab() {
-                   var $tabContent = $('.tab-content');
-                   var $minderEditor = $('.minder-editor');
+                    $tabContent.animate({
+                        height: '60px',
+                        display: 'block'
+                    });
 
-                   $tabContent.animate({
-                       height: '60px',
-                       display: 'block'
-                   });
-
-                   $minderEditor.animate({
-                       top: '92px'
-                   });
-               }
-           }
-       }
+                    $minderEditor.animate({
+                        top: '92px'
+                    });
+                }
+            }
+        }
     });
 angular.module('kityminderEditor')
     .directive('undoRedo', function() {

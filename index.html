@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>KityMinder Editor - Powered By FEX</title>
 
-	<link href="favicon.ico" type="image/x-icon" rel="shortcut icon">
+    <link href="favicon.ico" type="image/x-icon" rel="shortcut icon">
 
-	<!-- bower:css -->
+    <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css" />
     <link rel="stylesheet" href="bower_components/hotbox/hotbox.css" />
-    <link rel="stylesheet" href="node_modules/kityminder-core/dist/kityminder.core.css" />
+    <!-- <link rel="stylesheet" href="node_modules/kityminder-core/dist/kityminder.core.css" /> -->
+    <link rel="stylesheet" href="docs/kityminder-core/dist/kityminder.core.css">
     <link rel="stylesheet" href="bower_components/color-picker/dist/color-picker.css" />
-	<!-- endbower -->
+    <link rel="stylesheet" href="bower_components/toastr/toastr.min.css" />
+    <!-- endbower -->
 
-	<link rel="stylesheet" href="dist/kityminder.editor.css">
+    <link rel="stylesheet" href="dist/kityminder.editor.css">
 
     <style>
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
             height: 100%;
             overflow: hidden;
         }
+
         h1.editor-title {
             background: #393F4F;
             color: white;
@@ -36,9 +41,28 @@
         }
     </style>
 </head>
+
 <body ng-app="kityminderDemo" ng-controller="MainController">
-    <h1 class="editor-title">KityMinder Editor - Powered By FEX</h1>
+    <!-- <h1 class="editor-title">KityMinder Editorz - Powered By FEX</h1> -->
     <kityminder-editor on-init="initEditor(editor, minder)"></kityminder-editor>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="initRemoteModal">
+        <!-- 参数中有md -->
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h5 class="modal-title">加载提示</h5>
+                </div>
+                <div class="modal-body" style="font-size:16px;">检测到远程数据，要加载吗？</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">否</button>
+                    <button type="button" class="btn btn-success" id="initRemote">是</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 <!-- bower:js -->
@@ -59,7 +83,8 @@
 <script src="node_modules/kity/dist/kity.js"></script>
 <script src="bower_components/hotbox/hotbox.js"></script>
 <script src="bower_components/json-diff/json-diff.js"></script>
-<script src="node_modules/kityminder-core/dist/kityminder.core.js"></script>
+<!-- <script src="node_modules/kityminder-core/dist/kityminder.core.js"></script> -->
+<script src="docs/kityminder-core/dist/kityminder.core.min.js"></script>
 <script src="bower_components/color-picker/dist/color-picker.js"></script>
 <script src="bower_components/seajs/dist/sea.js"></script>
 <!-- endbower -->
@@ -103,17 +128,65 @@
 <script src="ui/directive/navigator/navigator.directive.js"></script>
 <script src="ui/directive/searchBox/searchBox.directive.js"></script>
 <script src="ui/directive/searchBtn/searchBtn.directive.js"></script>
-
-
+<script src="ui/directive/other/other.directive.js"></script>
+<script src="bower_components/toastr/toastr.min.js"></script>
 <script>
-	angular.module('kityminderDemo', ['kityminderEditor'])
-			.controller('MainController', function($scope) {
-				$scope.initEditor = function(editor, minder) {
-					window.editor = editor;
-					window.minder = minder;
-				};
-			});
+    !function () {
+        // window.onbeforeunload = function (e) {
+        //     let message = "系统可能不会保存您所做的更改。";
+        //     e = e || window.event;
+        //     if (e) {
+        //         e.returnValue = message;
+        //     }
+        //     return message;
+        // };
+        $('#initRemoteModal').on('hidden.bs.modal', function (e) {
+            $(this).remove();
+        });
+        jQuery.extend({
+            getQueryVariable: function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]);
+                return null;
+            }
+        })
+    }();
 
+    angular.module('kityminderDemo', ['kityminderEditor'])
+        .controller('MainController', function ($scope) {
+            $scope.initEditor = function (editor, minder) {
+                window.editor = editor;
+                window.minder = minder;
+                // minder.remoteLink = "https://cloudlandboy.github.io/myNote/resources/minds/";
+                minder.remoteLink = "http://127.0.0.1:5500/";
+                minder.activeMenuOnly = $('#more-op');
+                toastr.options = {
+                    "closeButton": true,
+                    "positionClass": "toast-top-center",
+                    "newestOnTop": false,
+                };
+                let link = $.getQueryVariable("md");
+                if (link) {
+                    if (!/^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/.test(link)) {
+                        link = minder.remoteLink + link + ".json";
+                    }
+                    $.getJSON(link, function (data) {
+                        $('#initRemoteModal').modal('show');
+                        $('#initRemote').one('click', function () {
+                            $('#initRemoteModal').modal('hide');
+                            try {
+                                minder.importJson(data)
+                                minder.readOnly();
+                                minder.isRemote = true;
+                            } catch (e) {
+                                toastr.error("出错了，不兼容的json格式！");
+                            }
+                        })
+                    })
+                }
+            };
+        });
 </script>
 
 </html>

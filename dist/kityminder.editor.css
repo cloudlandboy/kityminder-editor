@@ -51,7 +51,7 @@
 }
 div.minder-editor-container {
   position: absolute;
-  top: 40px;
+  top: 0px;
   bottom: 0;
   left: 0;
   right: 0;
@@ -1342,6 +1342,12 @@ div a.theme-item {
 .btn-group-vertical .search-caption .caption {
   font-size: 12px;
 }
+.other-btn button {
+  margin: 0 6px;
+}
+#toast-container {
+  top: 10px;
+}
 .search-box {
   float: right;
   background-color: #fff;
@@ -1414,6 +1420,7 @@ div a.theme-item {
   background-color: #c4d0ee;
 }
 .nav-bar {
+  opacity: 0.3;
   position: absolute;
   width: 35px;
   height: 240px;
@@ -1503,6 +1510,9 @@ div a.theme-item {
   background: white;
   border-radius: 100%;
   margin-top: -4px;
+}
+.nav-bar:hover {
+  opacity: 1;
 }
 .nav-previewer {
   background: #fff;

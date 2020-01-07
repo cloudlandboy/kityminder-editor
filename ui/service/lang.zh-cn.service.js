@@ -1,5 +1,5 @@
 angular.module('kityminderEditor')
-	.service('lang.zh-cn', function() {
+	.service('lang.zh-cn', function () {
 		return {
 			'zh-cn': {
 				'template': {
@@ -29,7 +29,7 @@ angular.module('kityminderEditor')
 					'fresh-blue-compat': '紧凑蓝',
 					'fresh-purple-compat': '紧凑紫',
 					'fresh-pink-compat': '紧凑粉',
-					'tianpan':'经典天盘',
+					'tianpan': '经典天盘',
 					'tianpan-compact': '紧凑天盘'
 				},
 				'maintopic': '中心主题',
@@ -159,7 +159,7 @@ angular.module('kityminderEditor')
 
 					'command': {
 						'appendsiblingnode': '插入同级主题',
-                        'appendparentnode': '插入上级主题',
+						'appendparentnode': '插入上级主题',
 						'appendchildnode': '插入下级主题',
 						'removenode': '删除',
 						'editnode': '编辑',
@@ -177,7 +177,7 @@ angular.module('kityminderEditor')
 						'outline': '大纲'
 					},
 
-					'search':'搜索',
+					'search': '搜索',
 
 					'expandtoleaf': '展开',
 
@@ -189,7 +189,30 @@ angular.module('kityminderEditor')
 					'tabs': {
 						'idea': '思路',
 						'appearence': '外观',
-						'view': '视图'
+						'view': '视图',
+						'other': '其他',
+					},
+					"other": {
+						'title': '更多...',
+						'out': '导出',
+						'in': '导入',
+						'downloadJSON': 'JSON数据',
+						'downloadPng': 'PNG图片',
+						'downloadText': 'Text文本',
+						'downloadMarkdown': 'Markdown格式',
+						'downloadSvg': 'SVG矢量图',
+						'downloadHtml': 'HTML+SVG',
+						'expandAll': '展开全部',
+						'closeAll': '收起全部',
+						'localData': '本地JSON数据',
+						'localText': '本地Text数据',
+						'remoteData': '远程JSON数据',
+						'createNew': '新建',
+						'help': '帮助',
+						'closeTop': '关闭顶部菜单',
+						'readOnly': '只读模式',
+						'editable': '编辑模式',
+						'view': '演示模式'
 					},
 
 					'quickvisit': {
@@ -329,9 +352,9 @@ angular.module('kityminderEditor')
 					'link': '链接',
 					'image': '图片',
 					'note': '备注',
-                    'insertlink': '插入链接',
-                    'insertimage': '插入图片',
-                    'insertnote': '插入备注',
+					'insertlink': '插入链接',
+					'insertimage': '插入图片',
+					'insertnote': '插入备注',
 					'removelink': '移除已有链接',
 					'removeimage': '移除已有图片',
 					'removenote': '移除已有备注',
@@ -367,7 +390,7 @@ angular.module('kityminderEditor')
 					'selectsiblings': '选择兄弟节点',
 					'selectlevel': '选择同级节点',
 					'selectpath': '选择路径',
-					'selecttree': '选择子树'
+					'selecttree': '选择子树',
 				},
 				'popupcolor': {
 					'clearColor': '清空颜色',

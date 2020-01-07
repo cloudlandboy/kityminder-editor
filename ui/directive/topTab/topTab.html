@@ -1,5 +1,6 @@
 <tabset>
-    <tab heading="{{ 'idea' | lang: 'ui/tabs'; }}" ng-click="toggleTopTab('idea')" select="setCurTab('idea')">
+    <tab ng-hide="minder.isReadonly" heading="{{ 'idea' | lang: 'ui/tabs'; }}" ng-click="toggleTopTab('idea')"
+        select="setCurTab('idea')">
         <undo-redo editor="editor"></undo-redo>
         <append-node minder="minder"></append-node>
         <arrange minder="minder"></arrange>
@@ -11,16 +12,22 @@
         <progress-editor minder="minder"></progress-editor>
         <resource-editor minder="minder"></resource-editor>
     </tab>
-    <tab heading="{{ 'appearence' | lang: 'ui/tabs'; }}" ng-click="toggleTopTab('appearance')" select="setCurTab('appearance')">
+    <tab ng-hide="minder.isReadonly" heading="{{ 'appearence' | lang: 'ui/tabs'; }}" ng-click="toggleTopTab('appearance')"
+        select="setCurTab('appearance')">
         <template-list minder="minder" class="inline-directive"></template-list>
         <theme-list minder="minder"></theme-list>
         <layout minder="minder" class="inline-directive"></layout>
         <style-operator minder="minder" class="inline-directive"></style-operator>
         <font-operator minder="minder" class="inline-directive"></font-operator>
     </tab>
-    <tab heading="{{ 'view' | lang: 'ui/tabs'; }}" ng-click="toggleTopTab('view')" select="setCurTab('view')">
+    <tab heading="{{ 'view' | lang: 'ui/tabs'; }}" ng-click="toggleTopTab('view')"
+        select="setCurTab('view')">
         <expand-level minder="minder"></expand-level>
         <select-all minder="minder"></select-all>
         <search-btn minder="minder"></search-btn>
+    </tab>
+    <tab heading="{{ 'title' | lang: 'ui/other'; }}" id="more-op" ng-click="toggleTopTab('other')"
+        select="setCurTab('other')">
+        <other minder="minder"></other>
     </tab>
 </tabset>

@@ -8,19 +8,19 @@
  *
  * @copyright: Baidu FEX, 2015 */
 angular.module('kityminderEditor')
-    .directive('navigator', ['memory', 'config', function(memory, config) {
+    .directive('navigator', ['memory', 'config', function (memory, config) {
         return {
             restrict: 'A',
             templateUrl: 'ui/directive/navigator/navigator.html',
             scope: {
                 minder: '='
             },
-            link: function(scope) {
-                minder.setDefaultOptions({zoom: config.get('zoom')});
+            link: function (scope) {
+                minder.setDefaultOptions({ zoom: config.get('zoom') });
 
                 scope.isNavOpen = !memory.get('navigator-hidden');
 
-                scope.getZoomRadio = function(value) {
+                scope.getZoomRadio = function (value) {
                     var zoomStack = minder.getOption('zoom');
                     var minValue = zoomStack[0];
                     var maxValue = zoomStack[zoomStack.length - 1];
@@ -29,21 +29,29 @@ angular.module('kityminderEditor')
                     return (1 - (value - minValue) / valueRange);
                 };
 
-                scope.getHeight = function(value) {
+                scope.getHeight = function (value) {
                     var totalHeight = $('.zoom-pan').height();
 
                     return scope.getZoomRadio(value) * totalHeight;
                 };
 
+                scope.showTopMenu = function () {
+                    $('#showMenuBtn').addClass('hidden');
+                    $('#top-tab').slideDown();
+                    $(window.editor.container).animate({
+                        top: window.editor.lastTop + "px"
+                    });
+                }
+
                 // 初始的缩放倍数
                 scope.zoom = 100;
 
                 // 发生缩放事件时
-                minder.on('zoom', function(e) {
+                minder.on('zoom', function (e) {
                     scope.zoom = e.zoom;
                 });
 
-                scope.toggleNavOpen = function() {
+                scope.toggleNavOpen = function () {
                     scope.isNavOpen = !scope.isNavOpen;
                     memory.set('navigator-hidden', !scope.isNavOpen);
 
@@ -51,17 +59,17 @@ angular.module('kityminderEditor')
                         bind();
                         updateContentView();
                         updateVisibleView();
-                    } else{
+                    } else {
                         unbind();
                     }
                 };
 
-                setTimeout(function() {
+                setTimeout(function () {
                     if (scope.isNavOpen) {
                         bind();
                         updateContentView();
                         updateVisibleView();
-                    } else{
+                    } else {
                         unbind();
                     }
                 }, 0);
@@ -104,7 +112,7 @@ angular.module('kityminderEditor')
                 var pathHandler = getPathHandler(minder.getTheme());
 
                 // 主题切换事件
-                minder.on('themechange', function(e) {
+                minder.on('themechange', function (e) {
                     pathHandler = getPathHandler(e.theme);
                 });
 
@@ -112,14 +120,14 @@ angular.module('kityminderEditor')
                     switch (theme) {
                         case "tianpan":
                         case "tianpan-compact":
-                            return function(nodePathData, x, y, width, height) {
+                            return function (nodePathData, x, y, width, height) {
                                 var r = width >> 1;
                                 nodePathData.push('M', x, y + r,
                                     'a', r, r, 0, 1, 1, 0, 0.01,
                                     'z');
                             }
                         default: {
-                            return function(nodePathData, x, y, width, height) {
+                            return function (nodePathData, x, y, width, height) {
                                 nodePathData.push('M', x, y,
                                     'h', width, 'v', height,
                                     'h', -width, 'z');
@@ -147,19 +155,19 @@ angular.module('kityminderEditor')
 
                     var dragging = false;
 
-                    paper.on('mousedown', function(e) {
+                    paper.on('mousedown', function (e) {
                         dragging = true;
                         moveView(e.getPosition('top'), 200);
                         $previewNavigator.addClass('grab');
                     });
 
-                    paper.on('mousemove', function(e) {
+                    paper.on('mousemove', function (e) {
                         if (dragging) {
                             moveView(e.getPosition('top'));
                         }
                     });
 
-                    $(window).on('mouseup', function() {
+                    $(window).on('mouseup', function () {
                         dragging = false;
                         $previewNavigator.removeClass('grab');
                     });
@@ -182,7 +190,7 @@ angular.module('kityminderEditor')
                     var nodePathData = [];
                     var connectionThumbData = [];
 
-                    minder.getRoot().traverse(function(node) {
+                    minder.getRoot().traverse(function (node) {
                         var box = node.getLayoutBox();
                         pathHandler(nodePathData, box.x, box.y, box.width, box.height);
                         if (node.getConnection() && node.parent && node.parent.isExpanded()) {

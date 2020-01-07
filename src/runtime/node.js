@@ -59,7 +59,7 @@ define(function(require, exports, module) {
             key: 'Alt + V',
             enable: function() {
                 var selectedNodes = minder.getSelectedNodes();
-                return selectedNodes.length == 1;
+                return selectedNodes.length == 1&&!minder.isReadonly;
             },
             action: importNodeData,
             next: 'idle'
