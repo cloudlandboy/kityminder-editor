@@ -3,17 +3,17 @@ KityMinder Editor
 
 
 
-**在线：**[http://mind.clboy.cn](http://mind.clboy.cn)
-
-可以在访问链接中加上md参数，指向json数据的请求地址，md参数要进行URL编码，请求的地址要允许跨域
-
-**例：**[http://mind.clboy.cn?md=mind.clboy.cn%2fdemo.json](http://mind.clboy.cn?md=mind.clboy.cn%2fdemo.json)
-
-
-
 ## 简介
 
 基于 [kityminder-editor](https://github.com/fex-team/kityminder-editor) 修改，由于没有学习过AngularJS，都是照葫芦画瓢添加的代码，只是为了方便个人在不登录的情况下编辑和查看思维导图。
+
+
+
+**在线：**[http://mind.clboy.cn](http://mind.clboy.cn)
+
+可以在访问链接中加上md参数，指向json数据的请求地址(带上http/https)，md参数要进行URL编码，请求的地址要允许跨域，为了方便，加载后的思维导图禁止直接编辑，可先下载到本地，然后从本地加载
+
+**例：**[http://mind.clboy.cn?md=http%3a%2f%2fmind.clboy.cn%2fdemo.json](http://mind.clboy.cn?md=http%3a%2f%2fmind.clboy.cn%2fdemo.json)
 
 
 
