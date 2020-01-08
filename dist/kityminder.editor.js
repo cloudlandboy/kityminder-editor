@@ -4150,6 +4150,7 @@ angular.module('kityminderEditor')
                     fullScreen(document.body);
                     minder.readOnly();
                     this.closeTop()
+                    minder.execCommand('hand');
                 };
                 scope.download = function (fm, ext) {
 
@@ -4810,7 +4811,6 @@ angular.module('kityminderEditor')
                         this.fire('readonly');
                         this.isReadonly = true;
                         scope.$$childHead.tabs[3].active = true;
-
                     }
                 };
                 minder.editable = function () {

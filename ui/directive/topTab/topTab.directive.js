@@ -55,7 +55,6 @@ angular.module('kityminderEditor')
                         this.fire('readonly');
                         this.isReadonly = true;
                         scope.$$childHead.tabs[3].active = true;
-
                     }
                 };
                 minder.editable = function () {

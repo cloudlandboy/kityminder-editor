@@ -28,6 +28,7 @@ angular.module('kityminderEditor')
                     fullScreen(document.body);
                     minder.readOnly();
                     this.closeTop()
+                    minder.execCommand('hand');
                 };
                 scope.download = function (fm, ext) {
 
