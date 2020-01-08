@@ -24,28 +24,6 @@ define(function (require, exports, module) {
         minder.execCommand('text', '中心主题');
         // 导出给其它 Runtime 使用
         this.minder = minder;
-
-        //只读和可编辑
-        minder.readOnly = function () {
-            if (!this.isReadonly) {
-                this.fire('readonly');
-                this.isReadonly = true;
-                $('#more-op').click();
-            }
-        };
-        minder.editable = function () {
-            if (this.isReadonly) {
-                if (minder.isRemote) {
-                    toastr.info("远程数据请下载到本地然后加载方可编辑！");
-                    return;
-                }
-                editor.container.appendChild(editor.receiver.element)
-                editor.hotbox.$container.appendChild(editor.hotbox.$element);
-                this.enable();
-                this.setStatus("normal", true);
-                this.isReadonly = false;
-            }
-        };
     }
 
     return module.exports = MinderRuntime;

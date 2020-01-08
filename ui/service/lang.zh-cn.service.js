@@ -204,7 +204,7 @@ angular.module('kityminderEditor')
 						'downloadHtml': 'HTML+SVG',
 						'expandAll': '展开全部',
 						'closeAll': '收起全部',
-						'localData': '本地JSON数据',
+						'localData': '本地数据(txt|json|md)',
 						'localText': '本地Text数据',
 						'remoteData': '远程JSON数据',
 						'createNew': '新建',

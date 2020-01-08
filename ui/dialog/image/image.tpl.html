@@ -10,9 +10,16 @@
                     <input type="text" class="form-control" ng-model="data.searchKeyword2" id="search-keyword"
                         placeholder="请输入搜索的关键词">
                 </div>
-                <button class="btn btn-primary" ng-click="searchImage()">百度一下</button>
+                <div class="btn-group">
+                    <button class="btn btn-primary" ng-click="searchImage('bing')">Bing</button>
+                    <button class="btn btn-primary" ng-click="searchImage('adoutu')">斗图</button>
+                </div>
             </form>
-            <div class="search-result" id="search-result">
+            <div class="alert alert-success" role="alert" style="margin-top: 15px;">
+                图片上右键 <span class="label label-info">复制图片链接</span> 然后外链插入
+            </div>
+            <small>经测试这里搜索出来的图片大多支持跨域！</small>
+            <!-- <div class="search-result" id="search-result">
                 <ul>
                     <li ng-repeat="image in list" id="{{ 'img-item' + $index }}" ng-class="{'selected' : isSelected}"
                         ng-click="selectImage($event)">
@@ -21,7 +28,7 @@
                         <span>{{ image.title }}</span>
                     </li>
                 </ul>
-            </div>
+            </div> -->
         </tab>
         <tab heading="外链图片" active="true">
             <form>

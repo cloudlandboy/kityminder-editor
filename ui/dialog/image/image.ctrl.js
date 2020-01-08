@@ -1,6 +1,9 @@
 angular.module('kityminderEditor')
-    .controller('image.ctrl', ['$http', '$scope', '$modalInstance', 'image', 'server', function($http, $scope, $modalInstance, image, server) {
-
+    .controller('image.ctrl', ['$http', '$scope', '$modalInstance', 'image', 'server', function ($http, $scope, $modalInstance, image, server) {
+        $scope.searchImgLink = document.createElement('a');
+        $scope.searchImgLink.target = "_blank";
+        $scope.searchImgLink.style.display = "none";
+        $('body').append($scope.searchImgLink);
         $scope.data = {
             list: [],
             url: image.url || '',
@@ -8,7 +11,7 @@ angular.module('kityminderEditor')
             R_URL: /^https?\:\/\/\w+/
         };
 
-        setTimeout(function() {
+        setTimeout(function () {
             var $imageUrl = $('#image-url');
             $imageUrl.focus();
             $imageUrl[0].setSelectionRange(0, $scope.data.url.length);
@@ -16,32 +19,41 @@ angular.module('kityminderEditor')
 
 
         // 搜索图片按钮点击事件
-        $scope.searchImage = function() {
-            $scope.list = [];
+        $scope.searchImage = function (type) {
+            var key = $scope.data.searchKeyword2;
+            if (type == 'adoutu') {
+                $scope.searchImgLink.href = "http://www.adoutu.com/search?keyword=" + key;
+            } else {
+                $scope.searchImgLink.href = "https://cn.bing.com/images/search?q=" + key;
+            }
+            $scope.searchImgLink.click();
+            // $scope.list = [];
 
-            getImageData()
-                .success(function(json) {
-                    if(json && json.data) {
-                        for(var i = 0; i < json.data.length; i++) {
-                            if(json.data[i].objURL) {
-                                $scope.list.push({
-                                    title: json.data[i].fromPageTitleEnc,
-                                    src: json.data[i].middleURL,
-                                    url: json.data[i].middleURL
-                                });
-                            }
-                        }
-                    }
-                })
-                .error(function() {
+            // getImageData()
+            //     .success(function (json) {
+            //         console.log(json);
 
-                });
+            //         if (json && json.data) {
+            //             for (var i = 0; i < json.data.length; i++) {
+            //                 if (json.data[i].objURL) {
+            //                     $scope.list.push({
+            //                         title: json.data[i].fromPageTitleEnc,
+            //                         src: json.data[i].middleURL,
+            //                         url: json.data[i].middleURL
+            //                     });
+            //                 }
+            //             }
+            //         }
+            //     })
+            //     .error(function () {
+
+            //     });
         };
 
         // 选择图片的鼠标点击事件
-        $scope.selectImage = function($event) {
-            var targetItem = $('#img-item'+ (this.$index));
-            var targetImg = $('#img-'+ (this.$index));
+        $scope.selectImage = function ($event) {
+            var targetItem = $('#img-item' + (this.$index));
+            var targetImg = $('#img-' + (this.$index));
 
             targetItem.siblings('.selected').removeClass('selected');
             targetItem.addClass('selected');
@@ -51,7 +63,7 @@ angular.module('kityminderEditor')
         };
 
         // 自动上传图片，后端需要直接返回图片 URL
-        $scope.uploadImage = function() {
+        $scope.uploadImage = function () {
             var fileInput = $('#upload-image');
             if (!fileInput.val()) {
                 return;
@@ -69,7 +81,7 @@ angular.module('kityminderEditor')
             }
         };
 
-        $scope.shortCut = function(e) {
+        $scope.shortCut = function (e) {
             e.stopPropagation();
 
             if (e.keyCode == 13) {
@@ -80,7 +92,7 @@ angular.module('kityminderEditor')
         };
 
         $scope.ok = function () {
-            if($scope.data.R_URL.test($scope.data.url)) {
+            if ($scope.data.R_URL.test($scope.data.url)) {
                 $modalInstance.close({
                     url: $scope.data.url,
                     title: $scope.data.title
@@ -107,8 +119,9 @@ angular.module('kityminderEditor')
         function getImageData() {
             var key = $scope.data.searchKeyword2;
             var currentTime = new Date();
-            var url = 'http://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&fp=result&queryWord='+ key +'&cl=2&lm=-1&ie=utf-8&oe=utf-8&st=-1&ic=0&word='+ key +'&face=0&istype=2&nc=1&pn=60&rn=60&gsm=3c&'+ currentTime.getTime() +'=&callback=JSON_CALLBACK';
+            var url = 'http://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&fp=result&queryWord=' + key + '&cl=2&lm=-1&ie=utf-8&oe=utf-8&st=-1&ic=0&word=' + key + '&face=0&istype=2&nc=1&pn=60&rn=60&gsm=3c&' + currentTime.getTime();
 
-            return $http.jsonp(url);
+            return $http.get(url);
+
         }
     }]);

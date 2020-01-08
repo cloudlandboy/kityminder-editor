@@ -26,6 +26,7 @@ angular.module('kityminderEditor')
                 };
                 scope.viewModel = function () {
                     fullScreen(document.body);
+                    minder.readOnly();
                     this.closeTop()
                 };
                 scope.download = function (fm, ext) {
@@ -56,23 +57,28 @@ angular.module('kityminderEditor')
                     }
                 }
                 scope.localFile = $('#localFile')[0];
+                scope.allowExt = ['txt', 'md', 'json'];
                 scope.localFile.onchange = function () {
                     var file = this.files[0];
-                    var fileName = file.name.split('.');
-                    fileName = fileName[fileName.length - 1];
-                    if (!(fileName == 'json')) {
-                        toastr.error("不是.json文件！");
+                    var fileExt = file.name.split('.').pop();
+                    if (!(scope.allowExt.includes(fileExt))) {
+                        toastr.error("不支持的文件类型！仅支持.txt|.md|.json文件");
                         return;
                     }
                     var fileReader = new FileReader();
                     fileReader.readAsText(file);
                     fileReader.onload = function () {
                         try {
-                            scope.minder.importJson(JSON.parse(fileReader.result))
+                            if (fileExt == 'json') {
+                                scope.minder.importJson(JSON.parse(fileReader.result))
+                            } else {
+                                fileExt = fileExt == 'txt' ? 'text' : 'markdown';
+                                editor.minder.importData(fileExt, fileReader.result)
+                            }
                             minder.isRemote = false;
                             minder.editable();
                         } catch (e) {
-                            toastr.error("出错了，不兼容的json格式！");
+                            toastr.error("出错了，不兼容的" + fileExt + "格式！");
                         }
                     }
                 };

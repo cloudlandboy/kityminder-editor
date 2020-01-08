@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder-editor - v1.0.67 - 2020-01-07
+ * kityminder-editor - v1.0.67 - 2020-01-08
  * https://github.com/fex-team/kityminder-editor
  * GitHub: https://github.com/fex-team/kityminder-editor 
  * Copyright (c) 2020 ; Licensed 
@@ -1408,27 +1408,6 @@ _p[14] = {
             minder.execCommand("text", "中心主题");
             // 导出给其它 Runtime 使用
             this.minder = minder;
-            //只读和可编辑
-            minder.readOnly = function() {
-                if (!this.isReadonly) {
-                    this.fire("readonly");
-                    this.isReadonly = true;
-                    $("#more-op").click();
-                }
-            };
-            minder.editable = function() {
-                if (this.isReadonly) {
-                    if (minder.isRemote) {
-                        toastr.info("远程数据请下载到本地然后加载方可编辑！");
-                        return;
-                    }
-                    editor.container.appendChild(editor.receiver.element);
-                    editor.hotbox.$container.appendChild(editor.hotbox.$element);
-                    this.enable();
-                    this.setStatus("normal", true);
-                    this.isReadonly = false;
-                }
-            };
         }
         return module.exports = MinderRuntime;
     }
@@ -2257,7 +2236,7 @@ angular.module('kityminderEditor').run(['$templateCache', function($templateCach
 
 
   $templateCache.put('ui/dialog/image/image.tpl.html',
-    "<div class=\"modal-header\"><h3 class=\"modal-title\">图片</h3></div><div class=\"modal-body\"><tabset><tab heading=\"图片搜索\"><form class=\"form-inline\"><div class=\"form-group\"><label for=\"search-keyword\">关键词：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.searchKeyword2\" id=\"search-keyword\" placeholder=\"请输入搜索的关键词\"></div><button class=\"btn btn-primary\" ng-click=\"searchImage()\">百度一下</button></form><div class=\"search-result\" id=\"search-result\"><ul><li ng-repeat=\"image in list\" id=\"{{ 'img-item' + $index }}\" ng-class=\"{'selected' : isSelected}\" ng-click=\"selectImage($event)\"><img id=\"{{ 'img-' + $index }}\" ng-src=\"{{ image.src || '' }}\" alt=\"{{ image.title }}\" onerror=\"this.parentNode.removeChild(this)\"> <span>{{ image.title }}</span></li></ul></div></tab><tab heading=\"外链图片\" active=\"true\"><form><div class=\"form-group\" ng-class=\"{true: 'has-success', false: 'has-error'}[urlPassed]\"><label for=\"image-url\">链接地址：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.url\" ng-blur=\"urlPassed = data.R_URL.test(data.url)\" ng-focus=\"this.value = data.url\" ng-keydown=\"shortCut($event)\" id=\"image-url\" placeholder=\"必填：以 http(s):// 开头\"></div><div class=\"form-group\" ng-class=\"{'has-success' : titlePassed}\"><label for=\"image-title\">提示文本：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.title\" ng-blur=\"titlePassed = true\" id=\"image-title\" placeholder=\"选填：鼠标在图片上悬停时提示的文本\"></div><div class=\"form-group\"><label for=\"image-preview\">图片预览：</label><img class=\"image-preview\" id=\"image-preview\" ng-src=\"{{ data.url }}\" alt=\"{{ data.title }}\"></div></form></tab><tab heading=\"上传图片\"><div class=\"alert alert-success\" role=\"alert\">可以把图片上传到图床，然后使用外链图片</div></tab></tabset></div><div class=\"modal-footer\"><button class=\"btn btn-primary\" ng-click=\"ok()\">确定</button> <button class=\"btn btn-warning\" ng-click=\"cancel()\">取消</button></div>"
+    "<div class=\"modal-header\"><h3 class=\"modal-title\">图片</h3></div><div class=\"modal-body\"><tabset><tab heading=\"图片搜索\"><form class=\"form-inline\"><div class=\"form-group\"><label for=\"search-keyword\">关键词：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.searchKeyword2\" id=\"search-keyword\" placeholder=\"请输入搜索的关键词\"></div><div class=\"btn-group\"><button class=\"btn btn-primary\" ng-click=\"searchImage('bing')\">Bing</button> <button class=\"btn btn-primary\" ng-click=\"searchImage('adoutu')\">斗图</button></div></form><div class=\"alert alert-success\" role=\"alert\" style=\"margin-top: 15px\">图片上右键 <span class=\"label label-info\">复制图片链接</span> 然后外链插入</div><small>经测试这里搜索出来的图片大多支持跨域！</small></tab><tab heading=\"外链图片\" active=\"true\"><form><div class=\"form-group\" ng-class=\"{true: 'has-success', false: 'has-error'}[urlPassed]\"><label for=\"image-url\">链接地址：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.url\" ng-blur=\"urlPassed = data.R_URL.test(data.url)\" ng-focus=\"this.value = data.url\" ng-keydown=\"shortCut($event)\" id=\"image-url\" placeholder=\"必填：以 http(s):// 开头\"></div><div class=\"form-group\" ng-class=\"{'has-success' : titlePassed}\"><label for=\"image-title\">提示文本：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.title\" ng-blur=\"titlePassed = true\" id=\"image-title\" placeholder=\"选填：鼠标在图片上悬停时提示的文本\"></div><div class=\"form-group\"><label for=\"image-preview\">图片预览：</label><img class=\"image-preview\" id=\"image-preview\" ng-src=\"{{ data.url }}\" alt=\"{{ data.title }}\"></div></form></tab><tab heading=\"上传图片\"><div class=\"alert alert-success\" role=\"alert\">可以把图片上传到图床，然后使用外链图片</div></tab></tabset></div><div class=\"modal-footer\"><button class=\"btn btn-primary\" ng-click=\"ok()\">确定</button> <button class=\"btn btn-warning\" ng-click=\"cancel()\">取消</button></div>"
   );
 
 }]);
@@ -2548,7 +2527,7 @@ angular.module('kityminderEditor')
 						'downloadHtml': 'HTML+SVG',
 						'expandAll': '展开全部',
 						'closeAll': '收起全部',
-						'localData': '本地JSON数据',
+						'localData': '本地数据(txt|json|md)',
 						'localText': '本地Text数据',
 						'remoteData': '远程JSON数据',
 						'createNew': '新建',
@@ -3206,8 +3185,11 @@ angular.module('kityminderEditor')
 
     }]);
 angular.module('kityminderEditor')
-    .controller('image.ctrl', ['$http', '$scope', '$modalInstance', 'image', 'server', function($http, $scope, $modalInstance, image, server) {
-
+    .controller('image.ctrl', ['$http', '$scope', '$modalInstance', 'image', 'server', function ($http, $scope, $modalInstance, image, server) {
+        $scope.searchImgLink = document.createElement('a');
+        $scope.searchImgLink.target = "_blank";
+        $scope.searchImgLink.style.display = "none";
+        $('body').append($scope.searchImgLink);
         $scope.data = {
             list: [],
             url: image.url || '',
@@ -3215,7 +3197,7 @@ angular.module('kityminderEditor')
             R_URL: /^https?\:\/\/\w+/
         };
 
-        setTimeout(function() {
+        setTimeout(function () {
             var $imageUrl = $('#image-url');
             $imageUrl.focus();
             $imageUrl[0].setSelectionRange(0, $scope.data.url.length);
@@ -3223,32 +3205,41 @@ angular.module('kityminderEditor')
 
 
         // 搜索图片按钮点击事件
-        $scope.searchImage = function() {
-            $scope.list = [];
+        $scope.searchImage = function (type) {
+            var key = $scope.data.searchKeyword2;
+            if (type == 'adoutu') {
+                $scope.searchImgLink.href = "http://www.adoutu.com/search?keyword=" + key;
+            } else {
+                $scope.searchImgLink.href = "https://cn.bing.com/images/search?q=" + key;
+            }
+            $scope.searchImgLink.click();
+            // $scope.list = [];
 
-            getImageData()
-                .success(function(json) {
-                    if(json && json.data) {
-                        for(var i = 0; i < json.data.length; i++) {
-                            if(json.data[i].objURL) {
-                                $scope.list.push({
-                                    title: json.data[i].fromPageTitleEnc,
-                                    src: json.data[i].middleURL,
-                                    url: json.data[i].middleURL
-                                });
-                            }
-                        }
-                    }
-                })
-                .error(function() {
+            // getImageData()
+            //     .success(function (json) {
+            //         console.log(json);
 
-                });
+            //         if (json && json.data) {
+            //             for (var i = 0; i < json.data.length; i++) {
+            //                 if (json.data[i].objURL) {
+            //                     $scope.list.push({
+            //                         title: json.data[i].fromPageTitleEnc,
+            //                         src: json.data[i].middleURL,
+            //                         url: json.data[i].middleURL
+            //                     });
+            //                 }
+            //             }
+            //         }
+            //     })
+            //     .error(function () {
+
+            //     });
         };
 
         // 选择图片的鼠标点击事件
-        $scope.selectImage = function($event) {
-            var targetItem = $('#img-item'+ (this.$index));
-            var targetImg = $('#img-'+ (this.$index));
+        $scope.selectImage = function ($event) {
+            var targetItem = $('#img-item' + (this.$index));
+            var targetImg = $('#img-' + (this.$index));
 
             targetItem.siblings('.selected').removeClass('selected');
             targetItem.addClass('selected');
@@ -3258,7 +3249,7 @@ angular.module('kityminderEditor')
         };
 
         // 自动上传图片，后端需要直接返回图片 URL
-        $scope.uploadImage = function() {
+        $scope.uploadImage = function () {
             var fileInput = $('#upload-image');
             if (!fileInput.val()) {
                 return;
@@ -3276,7 +3267,7 @@ angular.module('kityminderEditor')
             }
         };
 
-        $scope.shortCut = function(e) {
+        $scope.shortCut = function (e) {
             e.stopPropagation();
 
             if (e.keyCode == 13) {
@@ -3287,7 +3278,7 @@ angular.module('kityminderEditor')
         };
 
         $scope.ok = function () {
-            if($scope.data.R_URL.test($scope.data.url)) {
+            if ($scope.data.R_URL.test($scope.data.url)) {
                 $modalInstance.close({
                     url: $scope.data.url,
                     title: $scope.data.title
@@ -3314,9 +3305,10 @@ angular.module('kityminderEditor')
         function getImageData() {
             var key = $scope.data.searchKeyword2;
             var currentTime = new Date();
-            var url = 'http://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&fp=result&queryWord='+ key +'&cl=2&lm=-1&ie=utf-8&oe=utf-8&st=-1&ic=0&word='+ key +'&face=0&istype=2&nc=1&pn=60&rn=60&gsm=3c&'+ currentTime.getTime() +'=&callback=JSON_CALLBACK';
+            var url = 'http://image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&fp=result&queryWord=' + key + '&cl=2&lm=-1&ie=utf-8&oe=utf-8&st=-1&ic=0&word=' + key + '&face=0&istype=2&nc=1&pn=60&rn=60&gsm=3c&' + currentTime.getTime();
 
-            return $http.jsonp(url);
+            return $http.get(url);
+
         }
     }]);
 angular.module('kityminderEditor')
@@ -4156,6 +4148,7 @@ angular.module('kityminderEditor')
                 };
                 scope.viewModel = function () {
                     fullScreen(document.body);
+                    minder.readOnly();
                     this.closeTop()
                 };
                 scope.download = function (fm, ext) {
@@ -4186,23 +4179,28 @@ angular.module('kityminderEditor')
                     }
                 }
                 scope.localFile = $('#localFile')[0];
+                scope.allowExt = ['txt', 'md', 'json'];
                 scope.localFile.onchange = function () {
                     var file = this.files[0];
-                    var fileName = file.name.split('.');
-                    fileName = fileName[fileName.length - 1];
-                    if (!(fileName == 'json')) {
-                        toastr.error("不是.json文件！");
+                    var fileExt = file.name.split('.').pop();
+                    if (!(scope.allowExt.includes(fileExt))) {
+                        toastr.error("不支持的文件类型！仅支持.txt|.md|.json文件");
                         return;
                     }
                     var fileReader = new FileReader();
                     fileReader.readAsText(file);
                     fileReader.onload = function () {
                         try {
-                            scope.minder.importJson(JSON.parse(fileReader.result))
+                            if (fileExt == 'json') {
+                                scope.minder.importJson(JSON.parse(fileReader.result))
+                            } else {
+                                fileExt = fileExt == 'txt' ? 'text' : 'markdown';
+                                editor.minder.importData(fileExt, fileReader.result)
+                            }
                             minder.isRemote = false;
                             minder.editable();
                         } catch (e) {
-                            toastr.error("出错了，不兼容的json格式！");
+                            toastr.error("出错了，不兼容的" + fileExt + "格式！");
                         }
                     }
                 };
@@ -4805,6 +4803,32 @@ angular.module('kityminderEditor')
                         executedCurTab = false;
                     });
                 };
+
+                //只读和可编辑
+                minder.readOnly = function () {
+                    if (!this.isReadonly) {
+                        this.fire('readonly');
+                        this.isReadonly = true;
+                        scope.$$childHead.tabs[3].active = true;
+
+                    }
+                };
+                minder.editable = function () {
+                    if (this.isReadonly) {
+                        if (minder.isRemote) {
+                            toastr.info("远程数据请下载到本地然后加载方可编辑！");
+                            return;
+                        }
+                        editor.container.appendChild(editor.receiver.element)
+                        editor.hotbox.$container.appendChild(editor.hotbox.$element);
+                        this.enable();
+                        this.setStatus("normal", true);
+                        this.isReadonly = false;
+                        scope.$$childHead.tabs[0].active = true;
+
+                    }
+                };
+
                 function closeTopTab() {
                     var $tabContent = $('.tab-content');
                     var $minderEditor = $('.minder-editor');

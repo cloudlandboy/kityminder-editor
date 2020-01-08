@@ -3,7 +3,11 @@ KityMinder Editor
 
 
 
-在线：[https://mind.clboy.cn](https://mind.clboy.cn)
+**在线：**[http://mind.clboy.cn](http://mind.clboy.cn)
+
+可以在访问链接中加上md参数，指向json数据的请求地址，md参数要进行URL编码，请求的地址要允许跨域
+
+**例：**[http://mind.clboy.cn?md=mind.clboy.cn%2fdemo.json](http://mind.clboy.cn?md=mind.clboy.cn%2fdemo.json)
 
 
 
