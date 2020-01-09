@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder-editor - v1.0.67 - 2020-01-08
+ * kityminder-editor - v1.0.67 - 2020-01-09
  * https://github.com/fex-team/kityminder-editor
  * GitHub: https://github.com/fex-team/kityminder-editor 
  * Copyright (c) 2020 ; Licensed 
@@ -901,7 +901,8 @@ _p[12] = {
                     }
                 });
                 minder.on("dblclick", function() {
-                    if (minder.getSelectedNode() && minder._status !== "readonly") {
+                    //判断状态不准确，可能是hand
+                    if (!minder.isReadonly && minder.getSelectedNode() && minder._status !== "readonly") {
                         editText();
                     }
                 });
@@ -2165,7 +2166,7 @@ angular.module('kityminderEditor').run(['$templateCache', function($templateCach
 
 
   $templateCache.put('ui/directive/other/other.html',
-    "<div class=\"other-btn\" dropdown is-open=\"isopen\" style=\"padding-top:16px\"><button type=\"button\" class=\"btn btn-sm btn-primary clboy-btn\" ng-click=\"minder.execCommand('ExpandToLevel', 9999)\">{{ 'expandAll' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-secondary clboy-btn\" ng-click=\"minder.execCommand('ExpandToLevel', 1)\">{{ 'closeAll' | lang:'ui/other' }}</button><div class=\"btn-group\"><button type=\"button\" class=\"btn btn-sm btn-success dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{{ 'out' | lang:'ui/other' }}<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><li><a href=\"javascript:;\" ng-click=\"download('json','json')\">{{ 'downloadJSON' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('png','png')\">{{ 'downloadPng' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('text','txt')\">{{ 'downloadText' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('markdown','md')\">{{ 'downloadMarkdown' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('svg','svg')\">{{ 'downloadSvg' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('svg','html')\">{{ 'downloadHtml' | lang:'ui/other' }}</a></li></ul></div><div class=\"btn-group\"><button type=\"button\" class=\"btn btn-sm btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{{ 'in' | lang:'ui/other' }}<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><li><a href=\"javascript:;\" ng-click=\"loadData('local')\">{{ 'localData' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"loadData('remote')\">{{ 'remoteData' | lang:'ui/other' }}</a></li></ul></div><button type=\"button\" class=\"btn btn-sm btn-danger clboy-btn\" ng-click=\"createNewConfirm()\">{{ 'createNew' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-dark clboy-btn\" ng-click=\"closeTop()\">{{ 'closeTop' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-dark clboy-btn\" ng-disabled=\"minder.isReadonly\" ng-click=\"minder.readOnly()\">{{ 'readOnly' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-primary clboy-btn\" ng-disabled=\"!minder.isReadonly\" ng-click=\"minder.editable()\">{{ 'editable' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn- clboy-btn\" ng-click=\"viewModel()\">{{ 'view' | lang:'ui/other' }}</button> <input type=\"file\" id=\"localFile\" style=\"display: none\"></div><div class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\" id=\"createNewModal\"><div class=\"modal-dialog modal-sm\" role=\"document\"><div class=\"modal-content\"><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><h5 class=\"modal-title\">新建提示</h5></div><div class=\"modal-body\" style=\"font-size:16px\">你是要丢弃当前数据吗？</div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">否</button> <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\" ng-click=\"createNew()\">是</button></div></div></div></div>"
+    "<div class=\"other-btn\" dropdown is-open=\"isopen\" style=\"padding-top:16px\"><button type=\"button\" class=\"btn btn-sm btn-primary clboy-btn\" ng-click=\"minder.execCommand('ExpandToLevel', 9999)\">{{ 'expandAll' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-secondary clboy-btn\" ng-click=\"closeAll()\">{{ 'closeAll' | lang:'ui/other' }}</button><div class=\"btn-group\"><button type=\"button\" class=\"btn btn-sm btn-success dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{{ 'out' | lang:'ui/other' }}<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><li><a href=\"javascript:;\" ng-click=\"download('json','json')\">{{ 'downloadJSON' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('png','png')\">{{ 'downloadPng' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('text','txt')\">{{ 'downloadText' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('markdown','md')\">{{ 'downloadMarkdown' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('svg','svg')\">{{ 'downloadSvg' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('svg','html')\">{{ 'downloadHtml' | lang:'ui/other' }}</a></li></ul></div><div class=\"btn-group\"><button type=\"button\" class=\"btn btn-sm btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{{ 'in' | lang:'ui/other' }}<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><li><a href=\"javascript:;\" ng-click=\"loadData('local')\">{{ 'localData' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"loadData('remote')\">{{ 'remoteData' | lang:'ui/other' }}</a></li></ul></div><button type=\"button\" class=\"btn btn-sm btn-danger clboy-btn\" ng-click=\"createNewConfirm()\">{{ 'createNew' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-dark clboy-btn\" ng-click=\"closeTop()\">{{ 'closeTop' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-dark clboy-btn\" ng-disabled=\"minder.isReadonly\" ng-click=\"minder.readOnly()\">{{ 'readOnly' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-primary clboy-btn\" ng-disabled=\"!minder.isReadonly\" ng-click=\"minder.editable()\">{{ 'editable' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn- clboy-btn\" ng-click=\"viewModel()\">{{ 'view' | lang:'ui/other' }}</button> <input type=\"file\" id=\"localFile\" style=\"display: none\"></div><div class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\" id=\"createNewModal\"><div class=\"modal-dialog modal-sm\" role=\"document\"><div class=\"modal-content\"><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><h5 class=\"modal-title\">新建提示</h5></div><div class=\"modal-body\" style=\"font-size:16px\">你是要丢弃当前数据吗？</div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">否</button> <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\" ng-click=\"createNew()\">是</button></div></div></div></div>"
   );
 
 
@@ -2215,7 +2216,7 @@ angular.module('kityminderEditor').run(['$templateCache', function($templateCach
 
 
   $templateCache.put('ui/directive/topTab/topTab.html',
-    "<tabset><tab ng-hide=\"minder.isReadonly\" heading=\"{{ 'idea' | lang: 'ui/tabs'; }}\" ng-click=\"toggleTopTab('idea')\" select=\"setCurTab('idea')\"><undo-redo editor=\"editor\"></undo-redo><append-node minder=\"minder\"></append-node><arrange minder=\"minder\"></arrange><operation minder=\"minder\"></operation><hyper-link minder=\"minder\"></hyper-link><image-btn minder=\"minder\"></image-btn><note-btn minder=\"minder\"></note-btn><priority-editor minder=\"minder\"></priority-editor><progress-editor minder=\"minder\"></progress-editor><resource-editor minder=\"minder\"></resource-editor></tab><tab ng-hide=\"minder.isReadonly\" heading=\"{{ 'appearence' | lang: 'ui/tabs'; }}\" ng-click=\"toggleTopTab('appearance')\" select=\"setCurTab('appearance')\"><template-list minder=\"minder\" class=\"inline-directive\"></template-list><theme-list minder=\"minder\"></theme-list><layout minder=\"minder\" class=\"inline-directive\"></layout><style-operator minder=\"minder\" class=\"inline-directive\"></style-operator><font-operator minder=\"minder\" class=\"inline-directive\"></font-operator></tab><tab heading=\"{{ 'view' | lang: 'ui/tabs'; }}\" ng-click=\"toggleTopTab('view')\" select=\"setCurTab('view')\"><expand-level minder=\"minder\"></expand-level><select-all minder=\"minder\"></select-all><search-btn minder=\"minder\"></search-btn></tab><tab heading=\"{{ 'title' | lang: 'ui/other'; }}\" id=\"more-op\" ng-click=\"toggleTopTab('other')\" select=\"setCurTab('other')\"><other minder=\"minder\"></other></tab></tabset>"
+    "<tabset><tab ng-hide=\"minder.isReadonly\" heading=\"{{ 'idea' | lang: 'ui/tabs'; }}\" ng-click=\"toggleTopTab('idea')\" select=\"setCurTab('idea')\"><undo-redo editor=\"editor\"></undo-redo><append-node minder=\"minder\"></append-node><arrange minder=\"minder\"></arrange><operation minder=\"minder\"></operation><hyper-link minder=\"minder\"></hyper-link><image-btn minder=\"minder\"></image-btn><note-btn minder=\"minder\"></note-btn><priority-editor minder=\"minder\"></priority-editor><progress-editor minder=\"minder\"></progress-editor><resource-editor minder=\"minder\"></resource-editor></tab><tab ng-hide=\"minder.isReadonly\" heading=\"{{ 'appearence' | lang: 'ui/tabs'; }}\" ng-click=\"toggleTopTab('appearance')\" select=\"setCurTab('appearance')\"><template-list minder=\"minder\" class=\"inline-directive\"></template-list><theme-list minder=\"minder\"></theme-list><layout minder=\"minder\" class=\"inline-directive\"></layout><style-operator minder=\"minder\" class=\"inline-directive\"></style-operator><font-operator minder=\"minder\" class=\"inline-directive\"></font-operator></tab><tab heading=\"{{ 'view' | lang: 'ui/tabs'; }}\" ng-click=\"toggleTopTab('view')\" select=\"setCurTab('view')\"><expand-level minder=\"minder\"></expand-level><select-all minder=\"minder\"></select-all><search-btn minder=\"minder\"></search-btn></tab><tab heading=\"{{ 'title' | lang: 'ui/other'; }}\" id=\"more-op\" ng-click=\"toggleTopTab('other')\" select=\"setCurTab('other')\"><div minder=\"minder\" class=\"other\"></div></tab><a href=\"https://github.com/cloudlandboy/kityminder-editor\" target=\"_blank\" id=\"repository\"><svg t=\"1578484112519\" class=\"icon\" viewbox=\"0 0 1025 1024\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" p-id=\"3931\" width=\"30\" height=\"30\"><path d=\"M512.032 831.904c-19.168 0-38.304-9.92-58.144-29.76-7.808-7.808-7.808-20.48 0-28.288s20.48-7.808 28.288 0C494.368 786.08 504.16 792 512.032 792s17.664-5.92 29.856-18.144c7.808-7.808 20.48-7.808 28.288 0s7.808 20.48 0 28.288c-19.84 19.84-38.976 29.76-58.144 29.76z m-512-306.4c0 49.888 4.256 95.136 12.8 135.68s20.544 75.744 36 105.536 35.008 55.904 58.656 78.336 49.344 40.928 77.056 55.456c27.744 14.528 59.456 26.304 95.2 35.264S351.84 951.04 388.8 954.624 466.496 960 510.944 960c44.448 0 85.248-1.792 122.4-5.376s73.6-9.856 109.344-18.848c35.744-8.96 67.552-20.736 95.456-35.264s53.792-33.024 77.6-55.456c23.808-22.432 43.456-48.544 58.944-78.336s27.552-64.96 36.256-105.536c8.704-40.576 13.056-85.792 13.056-135.68 0-89.376-27.744-166.368-83.2-230.976 3.2-8.608 5.952-18.496 8.256-29.6s4.544-26.816 6.656-47.104c2.144-20.288 1.344-43.712-2.4-70.272S942.56 93.888 932.256 66.24l-8-1.632c-5.344-1.088-14.048-0.704-26.144 1.088s-26.208 5.024-42.4 9.696-37.056 13.92-62.656 27.744-52.608 31.328-81.056 52.512c-48.352-14.72-115.008-30.112-200-30.112s-151.808 15.392-200.544 30.112c-28.448-21.184-55.552-38.592-81.344-52.224s-46.4-22.976-61.856-28c-15.456-5.024-29.792-8.256-42.944-9.696s-21.6-1.888-25.344-1.344c-3.744 0.544-6.496 1.152-8.256 1.888-10.304 27.648-17.408 54.752-21.344 81.312s-4.8 49.888-2.656 69.984c2.144 20.096 4.448 35.904 6.944 47.392S80 286.304 83.2 294.56C27.744 358.816 0 435.808 0 525.536z m136.544 113.888c0-58.016 21.344-110.624 64-157.856 12.8-14.4 27.648-25.312 44.544-32.704s36.096-11.616 57.6-12.608 42.048-0.8 61.6 0.608 43.744 3.296 72.544 5.696 53.696 3.616 74.656 3.616c20.96 0 45.856-1.184 74.656-3.616s52.992-4.288 72.544-5.696c19.552-1.408 40.096-1.6 61.6-0.608s40.8 5.216 57.856 12.608c17.056 7.392 32 18.304 44.8 32.704 42.656 47.232 64 99.84 64 157.856 0 34.016-3.552 64.32-10.656 90.944s-16.096 48.928-26.944 66.912c-10.848 18.016-26.048 33.216-45.6 45.632s-38.496 22.016-56.8 28.8c-18.304 6.784-41.952 12.096-70.944 15.904s-54.944 6.112-77.856 6.912c-22.944 0.8-51.808 1.216-86.656 1.216s-63.648-0.416-86.4-1.216c-22.752-0.8-48.608-3.104-77.6-6.912s-52.608-9.12-70.944-15.904c-18.304-6.816-37.248-16.416-56.8-28.8s-34.752-27.616-45.6-45.632c-10.848-18.016-19.84-40.32-26.944-66.912s-10.656-56.928-10.656-90.944zM256.032 608c0-53.024 28.64-96 64-96s64 42.976 64 96-28.64 96-64 96-64-42.976-64-96z m384 0c0-53.024 28.64-96 64-96s64 42.976 64 96-28.64 96-64 96-64-42.976-64-96z\" p-id=\"3932\" fill=\"#5cb85c\"></path></svg></a></tabset>"
   );
 
 
@@ -2236,7 +2237,7 @@ angular.module('kityminderEditor').run(['$templateCache', function($templateCach
 
 
   $templateCache.put('ui/dialog/image/image.tpl.html',
-    "<div class=\"modal-header\"><h3 class=\"modal-title\">图片</h3></div><div class=\"modal-body\"><tabset><tab heading=\"图片搜索\"><form class=\"form-inline\"><div class=\"form-group\"><label for=\"search-keyword\">关键词：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.searchKeyword2\" id=\"search-keyword\" placeholder=\"请输入搜索的关键词\"></div><div class=\"btn-group\"><button class=\"btn btn-primary\" ng-click=\"searchImage('bing')\">Bing</button> <button class=\"btn btn-primary\" ng-click=\"searchImage('adoutu')\">斗图</button></div></form><div class=\"alert alert-success\" role=\"alert\" style=\"margin-top: 15px\">图片上右键 <span class=\"label label-info\">复制图片链接</span> 然后外链插入</div><small>经测试这里搜索出来的图片大多支持跨域！</small></tab><tab heading=\"外链图片\" active=\"true\"><form><div class=\"form-group\" ng-class=\"{true: 'has-success', false: 'has-error'}[urlPassed]\"><label for=\"image-url\">链接地址：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.url\" ng-blur=\"urlPassed = data.R_URL.test(data.url)\" ng-focus=\"this.value = data.url\" ng-keydown=\"shortCut($event)\" id=\"image-url\" placeholder=\"必填：以 http(s):// 开头\"></div><div class=\"form-group\" ng-class=\"{'has-success' : titlePassed}\"><label for=\"image-title\">提示文本：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.title\" ng-blur=\"titlePassed = true\" id=\"image-title\" placeholder=\"选填：鼠标在图片上悬停时提示的文本\"></div><div class=\"form-group\"><label for=\"image-preview\">图片预览：</label><img class=\"image-preview\" id=\"image-preview\" ng-src=\"{{ data.url }}\" alt=\"{{ data.title }}\"></div></form></tab><tab heading=\"上传图片\"><div class=\"alert alert-success\" role=\"alert\">可以把图片上传到图床，然后使用外链图片</div></tab></tabset></div><div class=\"modal-footer\"><button class=\"btn btn-primary\" ng-click=\"ok()\">确定</button> <button class=\"btn btn-warning\" ng-click=\"cancel()\">取消</button></div>"
+    "<div class=\"modal-header\"><h3 class=\"modal-title\">图片</h3></div><div class=\"modal-body\"><tabset><tab heading=\"图片搜索\"><form class=\"form-inline\"><div class=\"form-group\"><label for=\"search-keyword\">关键词：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.searchKeyword2\" id=\"search-keyword\" placeholder=\"请输入搜索的关键词\"></div><div class=\"btn-group\"><button class=\"btn btn-primary\" ng-click=\"searchImage('bing')\">Bing</button> <button class=\"btn btn-primary\" ng-click=\"searchImage('adoutu')\">斗图</button></div></form><div class=\"alert alert-success\" role=\"alert\" style=\"margin-top: 15px\">图片上右键 <span class=\"label label-info\">复制图片链接</span> 然后外链插入</div><small>经测试这里搜索出来的图片大多支持跨域！</small></tab><tab heading=\"外链图片\" active=\"true\"><form><div class=\"form-group\" ng-class=\"{true: 'has-success', false: 'has-error'}[urlPassed]\"><label for=\"image-url\">链接地址：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.url\" ng-blur=\"urlPassed = data.R_URL.test(data.url)\" ng-focus=\"this.value = data.url\" ng-keydown=\"shortCut($event)\" id=\"image-url\" placeholder=\"必填：以 http(s):// 开头\"></div><div class=\"form-group\" ng-class=\"{'has-success' : titlePassed}\"><label for=\"image-title\">提示文本：</label><input type=\"text\" class=\"form-control\" ng-model=\"data.title\" ng-blur=\"titlePassed = true\" id=\"image-title\" placeholder=\"选填：鼠标在图片上悬停时提示的文本\"></div><div class=\"form-group\"><label for=\"image-preview\">图片预览：</label><img class=\"image-preview\" id=\"image-preview\" ng-src=\"{{ data.url }}\" alt=\"{{ data.title }}\"></div></form></tab><tab heading=\"上传图片\"><div class=\"alert alert-success\" role=\"alert\">可以把图片上传到图床，然后使用外链图片</div><p>推荐使用 <a href=\"https://postimages.org/\" target=\"_blank\"><img src=\"https://postimgs.org/img/logo.png\" width=\"129\" height=\"22\" alt=\"postimages\"></a></p></tab></tabset></div><div class=\"modal-footer\"><button class=\"btn btn-primary\" ng-click=\"ok()\">确定</button> <button class=\"btn btn-warning\" ng-click=\"cancel()\">取消</button></div>"
   );
 
 }]);
@@ -2526,7 +2527,7 @@ angular.module('kityminderEditor')
 						'downloadSvg': 'SVG矢量图',
 						'downloadHtml': 'HTML+SVG',
 						'expandAll': '展开全部',
-						'closeAll': '收起全部',
+						'closeAll': '收起全部(深度)',
 						'localData': '本地数据(txt|json|md)',
 						'localText': '本地Text数据',
 						'remoteData': '远程JSON数据',
@@ -3696,6 +3697,19 @@ angular.module('kityminderEditor')
                 minder: '='
             },
             link: function (scope) {
+
+                function fullchange() {
+                    if (document.fullscreenElement) {
+                        // 进入全屏
+                        minder.otherScope.closeTop();
+                    } else {
+                        // 退出全屏
+                        scope.showTopMenu();
+                    }
+                }
+
+                document.addEventListener('fullscreenchange', fullchange);
+
                 minder.setDefaultOptions({ zoom: config.get('zoom') });
 
                 scope.isNavOpen = !memory.get('navigator-hidden');
@@ -3718,8 +3732,8 @@ angular.module('kityminderEditor')
                 scope.showTopMenu = function () {
                     $('#showMenuBtn').addClass('hidden');
                     $('#top-tab').slideDown();
-                    $(window.editor.container).animate({
-                        top: window.editor.lastTop + "px"
+                    $(editor.container).animate({
+                        top: editor.lastTop + "px"
                     });
                 }
 
@@ -4123,33 +4137,35 @@ angular.module('kityminderEditor')
 angular.module('kityminderEditor')
     .directive('other', function () {
         return {
+            restrict: 'C',
             templateUrl: 'ui/directive/other/other.html',
             scope: {
                 minder: '='
             },
             link: function (scope) {
+                minder.otherScope = scope;
                 scope.downLink = $('<a class="hidden" id="downLink"></a>')[0];
                 $(document.body).append(scope.downLink);
-                function fullScreen(el) {
-                    var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen,
-                        wscript;
-
-                    if (typeof rfs != "undefined" && rfs) {
-                        rfs.call(el);
-                        return;
+                function fullScreen(element) {
+                    if (element.requestFullscreen) {
+                        element.requestFullscreen();
+                    } else if (element.mozRequestFullScreen) {
+                        element.mozRequestFullScreen();
+                    } else if (element.msRequestFullscreen) {
+                        element.msRequestFullscreen();
+                    } else if (element.webkitRequestFullscreen) {
+                        element.webkitRequestFullScreen();
                     }
-
-                    if (typeof window.ActiveXObject != "undefined") {
-                        wscript = new ActiveXObject("WScript.Shell");
-                        if (wscript) {
-                            wscript.SendKeys("{F11}");
-                        }
-                    }
-                };
+                }
+                scope.closeAll = function () {
+                    kity.closeDeep = true;
+                    minder.execCommand('ExpandToLevel', 1);
+                    kity.closeDeep = false;
+                }
                 scope.viewModel = function () {
-                    fullScreen(document.body);
+                    fullScreen(document.documentElement);
                     minder.readOnly();
-                    this.closeTop()
+                    this.closeTop();
                     minder.execCommand('hand');
                 };
                 scope.download = function (fm, ext) {
@@ -4159,8 +4175,6 @@ angular.module('kityminderEditor')
                         var blob;
                         if (fm == 'png') {
                             blob = base64ToBlob(data);
-                        } else if (fm == 'json') {
-                            blob = new Blob([JSON.stringify(data)]);
                         } else if (ext == 'html') {
                             var a = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge">';
                             var b = '<title>' + fileName + '</title></head><body>' + data + '</body></html>';
@@ -4201,14 +4215,16 @@ angular.module('kityminderEditor')
                             minder.isRemote = false;
                             minder.editable();
                         } catch (e) {
+                            console.error(e);
                             toastr.error("出错了，不兼容的" + fileExt + "格式！");
                         }
                     }
                 };
                 scope.closeTop = function () {
                     var container = window.editor.container;
-                    $('#top-tab').slideUp();
-                    window.editor.lastTop = container.offsetTop;
+                    var topTab = $('#top-tab');
+                    editor.lastTop = topTab.height();
+                    topTab.slideUp();
                     $(container).animate({
                         top: '0px'
                     });

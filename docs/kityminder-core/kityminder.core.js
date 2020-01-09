@@ -5129,7 +5129,8 @@
                     execute: function (km, level) {
                         km.getRoot().traverse(function (node) {
                             if (node.getLevel() < level) node.expand();
-                            if (node.getLevel() == level && !node.isLeaf()) node.collapse();
+                            var flag = kity.closeDeep ? node.getLevel() >= level : node.getLevel() == level;
+                            if (flag && !node.isLeaf()) node.collapse();
                         });
                         km.refresh(100);
                     },
@@ -5661,7 +5662,7 @@
                         this.viewer = new ImageViewer();
                     },
                     events: {
-                        "normal.dblclick": function (e) {
+                        "normal.dblclick readonly.dblclick hand.dblclick": function (e) {
                             var shape = e.kityEvent.targetShape;
                             if (shape.__KityClassName === "Image" && shape.url) {
                                 this.viewer.open(shape.url);
@@ -8191,7 +8192,7 @@
                         let temp = document.createElement('canvas');
                         var ctx = temp.getContext("2d");
                         ctx.font = info.width / 6 + "px Arial";
-                        ctx.fillStyle="#FF0000";
+                        ctx.fillStyle = "#FF0000";
                         ctx.fillText("图片下载失败", 0, (info.height / 2) + (info.width / 6));
                         image.src = temp.toDataURL("image/png");
                         resolve({

@@ -1,33 +1,35 @@
 angular.module('kityminderEditor')
     .directive('other', function () {
         return {
+            restrict: 'C',
             templateUrl: 'ui/directive/other/other.html',
             scope: {
                 minder: '='
             },
             link: function (scope) {
+                minder.otherScope = scope;
                 scope.downLink = $('<a class="hidden" id="downLink"></a>')[0];
                 $(document.body).append(scope.downLink);
-                function fullScreen(el) {
-                    var rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen || el.msRequestFullScreen,
-                        wscript;
-
-                    if (typeof rfs != "undefined" && rfs) {
-                        rfs.call(el);
-                        return;
+                function fullScreen(element) {
+                    if (element.requestFullscreen) {
+                        element.requestFullscreen();
+                    } else if (element.mozRequestFullScreen) {
+                        element.mozRequestFullScreen();
+                    } else if (element.msRequestFullscreen) {
+                        element.msRequestFullscreen();
+                    } else if (element.webkitRequestFullscreen) {
+                        element.webkitRequestFullScreen();
                     }
-
-                    if (typeof window.ActiveXObject != "undefined") {
-                        wscript = new ActiveXObject("WScript.Shell");
-                        if (wscript) {
-                            wscript.SendKeys("{F11}");
-                        }
-                    }
-                };
+                }
+                scope.closeAll = function () {
+                    kity.closeDeep = true;
+                    minder.execCommand('ExpandToLevel', 1);
+                    kity.closeDeep = false;
+                }
                 scope.viewModel = function () {
-                    fullScreen(document.body);
+                    fullScreen(document.documentElement);
                     minder.readOnly();
-                    this.closeTop()
+                    this.closeTop();
                     minder.execCommand('hand');
                 };
                 scope.download = function (fm, ext) {
@@ -37,8 +39,6 @@ angular.module('kityminderEditor')
                         var blob;
                         if (fm == 'png') {
                             blob = base64ToBlob(data);
-                        } else if (fm == 'json') {
-                            blob = new Blob([JSON.stringify(data)]);
                         } else if (ext == 'html') {
                             var a = '<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="ie=edge">';
                             var b = '<title>' + fileName + '</title></head><body>' + data + '</body></html>';
@@ -79,14 +79,16 @@ angular.module('kityminderEditor')
                             minder.isRemote = false;
                             minder.editable();
                         } catch (e) {
+                            console.error(e);
                             toastr.error("出错了，不兼容的" + fileExt + "格式！");
                         }
                     }
                 };
                 scope.closeTop = function () {
                     var container = window.editor.container;
-                    $('#top-tab').slideUp();
-                    window.editor.lastTop = container.offsetTop;
+                    var topTab = $('#top-tab');
+                    editor.lastTop = topTab.height();
+                    topTab.slideUp();
                     $(container).animate({
                         top: '0px'
                     });

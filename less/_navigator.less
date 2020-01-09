@@ -1,11 +1,11 @@
 .nav-bar {
-    opacity: 0.3;
+    opacity: 0.5;
     position: absolute;
     width: 35px;
     height: 240px;
     padding: 5px 0;
     left: 10px;
-    bottom: 10px;
+    bottom: -210px;
     background: #fc8383;
     color: #fff;
     border-radius: 4px;
@@ -13,7 +13,7 @@
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
     transition: -webkit-transform .7s 0.1s ease;
     transition: transform .7s 0.1s ease;
-
+    transition: bottom 0.8s;
     .nav-btn {
         width: 35px;
         height: 24px;
@@ -105,6 +105,7 @@
 }
 .nav-bar:hover{
     opacity: 1;
+    bottom: 10px;
 }
 
 .nav-previewer {

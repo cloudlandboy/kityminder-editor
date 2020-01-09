@@ -16,6 +16,19 @@ angular.module('kityminderEditor')
                 minder: '='
             },
             link: function (scope) {
+
+                function fullchange() {
+                    if (document.fullscreenElement) {
+                        // 进入全屏
+                        minder.otherScope.closeTop();
+                    } else {
+                        // 退出全屏
+                        scope.showTopMenu();
+                    }
+                }
+
+                document.addEventListener('fullscreenchange', fullchange);
+
                 minder.setDefaultOptions({ zoom: config.get('zoom') });
 
                 scope.isNavOpen = !memory.get('navigator-hidden');
@@ -38,8 +51,8 @@ angular.module('kityminderEditor')
                 scope.showTopMenu = function () {
                     $('#showMenuBtn').addClass('hidden');
                     $('#top-tab').slideDown();
-                    $(window.editor.container).animate({
-                        top: window.editor.lastTop + "px"
+                    $(editor.container).animate({
+                        top: editor.lastTop + "px"
                     });
                 }
 

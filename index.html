@@ -39,6 +39,21 @@
             font-weight: normal;
             padding: 0 20px;
         }
+
+        #repository {
+            position: absolute;
+            top: 0;
+            right: 10px;
+        }
+
+        #repository path {
+            transition: .8s;
+            -webkit-transition: .8s;
+        }
+
+        #repository:hover path {
+            fill: #fc8383;
+        }
     </style>
 </head>
 
@@ -84,7 +99,7 @@
 <script src="bower_components/hotbox/hotbox.js"></script>
 <script src="bower_components/json-diff/json-diff.js"></script>
 <!-- <script src="node_modules/kityminder-core/dist/kityminder.core.js"></script> -->
-<script src="docs/kityminder-core/kityminder.core.min.js"></script>
+<script src="docs/kityminder-core/kityminder.core.js"></script>
 <script src="bower_components/color-picker/dist/color-picker.js"></script>
 <script src="bower_components/seajs/dist/sea.js"></script>
 <!-- endbower -->
@@ -158,8 +173,8 @@
             $scope.initEditor = function (editor, minder) {
                 window.editor = editor;
                 window.minder = minder;
-                minder.remoteLink = "https://cloudlandboy.github.io/myNote/resources/minds/";
-                minder.activeMenuOnly = $('#more-op');
+                // minder.remoteLink = "https://cloudlandboy.github.io/myNote/resources/minds/";
+                minder.remoteLink = "http://127.0.0.1:5500/docs/";
                 toastr.options = {
                     "closeButton": true,
                     "positionClass": "toast-top-center",
@@ -176,7 +191,7 @@
                             $('#initRemoteModal').modal('hide');
                             try {
                                 minder.importJson(data)
-                                minder.readOnly();
+                                minder.otherScope.viewModel();
                                 minder.isRemote = true;
                             } catch (e) {
                                 toastr.error("出错了，不兼容的json格式！");

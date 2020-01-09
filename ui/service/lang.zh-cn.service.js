@@ -203,7 +203,7 @@ angular.module('kityminderEditor')
 						'downloadSvg': 'SVG矢量图',
 						'downloadHtml': 'HTML+SVG',
 						'expandAll': '展开全部',
-						'closeAll': '收起全部',
+						'closeAll': '收起全部(深度)',
 						'localData': '本地数据(txt|json|md)',
 						'localText': '本地Text数据',
 						'remoteData': '远程JSON数据',

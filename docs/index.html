@@ -37,6 +37,21 @@
 			height: 100%;
 			overflow: hidden;
 		}
+
+		#repository {
+			position: absolute;
+			top: 0;
+			right: 10px;
+		}
+
+		#repository path {
+			transition: .8s;
+			-webkit-transition: .8s;
+		}
+
+		#repository:hover path {
+			fill: #fc8383;
+		}
 	</style>
 </head>
 
@@ -161,7 +176,7 @@
 							$('#initRemoteModal').modal('hide');
 							try {
 								minder.importJson(data)
-								minder.readOnly();
+								minder.otherScope.viewModel();
 								minder.isRemote = true;
 							} catch (e) {
 								toastr.error("出错了，不兼容的json格式！");
