@@ -1,5 +1,5 @@
 angular.module('kityminderEditor')
-    .directive('other', function () {
+    .directive('other', ['lang.zh-cn', function (zhText) {
         return {
             restrict: 'C',
             templateUrl: 'ui/directive/other/other.html',
@@ -9,6 +9,7 @@ angular.module('kityminderEditor')
             link: function (scope) {
                 minder.otherScope = scope;
                 scope.downLink = $('<a class="hidden" id="downLink"></a>')[0];
+                scope.isFullScreen = false;
                 $(document.body).append(scope.downLink);
                 function fullScreen(element) {
                     if (element.requestFullscreen) {
@@ -20,17 +21,37 @@ angular.module('kityminderEditor')
                     } else if (element.webkitRequestFullscreen) {
                         element.webkitRequestFullScreen();
                     }
-                }
+                    scope.isFullScreen = true;
+                    $('#fullScreen-btn').text(zhText['zh-cn'].ui.other.exitView);
+                };
+                function exitFullscreen() {
+                    if (document.exitFullScreen) {
+                        document.exitFullScreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (element.msExitFullscreen) {
+                        element.msExitFullscreen();
+                    }
+                    scope.isFullScreen = false;
+                    $('#fullScreen-btn').text(zhText['zh-cn'].ui.other.view);
+                };
+
                 scope.closeAll = function () {
                     kity.closeDeep = true;
                     minder.execCommand('ExpandToLevel', 1);
                     kity.closeDeep = false;
                 }
                 scope.viewModel = function () {
-                    fullScreen(document.documentElement);
-                    minder.readOnly();
-                    this.closeTop();
-                    minder.execCommand('hand');
+                    if (this.isFullScreen) {
+                        exitFullscreen();
+                    } else {
+                        fullScreen(document.documentElement);
+                        minder.readOnly();
+                        this.closeTop();
+                        minder.execCommand('hand');
+                    }
                 };
                 scope.download = function (fm, ext) {
 
@@ -146,4 +167,4 @@ angular.module('kityminderEditor')
                 };
             }
         }
-    });
+    }]);

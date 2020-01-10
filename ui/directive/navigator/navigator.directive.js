@@ -8,7 +8,7 @@
  *
  * @copyright: Baidu FEX, 2015 */
 angular.module('kityminderEditor')
-    .directive('navigator', ['memory', 'config', function (memory, config) {
+    .directive('navigator', ['memory', 'config', 'lang.zh-cn', function (memory, config, zhText) {
         return {
             restrict: 'A',
             templateUrl: 'ui/directive/navigator/navigator.html',
@@ -16,14 +16,11 @@ angular.module('kityminderEditor')
                 minder: '='
             },
             link: function (scope) {
-
                 function fullchange() {
-                    if (document.fullscreenElement) {
-                        // 进入全屏
-                        minder.otherScope.closeTop();
-                    } else {
-                        // 退出全屏
+                    if (!document.fullscreenElement) {
                         scope.showTopMenu();
+                        minder.otherScope.isFullScreen = false;
+                        $('#fullScreen-btn').text(zhText['zh-cn'].ui.other.view);
                     }
                 }
 

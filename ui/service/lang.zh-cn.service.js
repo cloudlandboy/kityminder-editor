@@ -212,7 +212,8 @@ angular.module('kityminderEditor')
 						'closeTop': '关闭顶部菜单',
 						'readOnly': '只读模式',
 						'editable': '编辑模式',
-						'view': '演示模式'
+						'view': '演示模式',
+						'exitView': '退出演示模式',
 					},
 
 					'quickvisit': {

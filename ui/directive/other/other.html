@@ -39,8 +39,8 @@
     <button type="button" class="btn btn-sm btn-primary clboy-btn" ng-disabled="!minder.isReadonly"
         ng-click="minder.editable()">{{ 'editable' | lang:'ui/other' }}</button>
 
-    <button type="button" class="btn btn-sm btn- clboy-btn"
-        ng-click="viewModel()">{{ 'view' | lang:'ui/other' }}</button>
+    <button type="button" class="btn btn-sm btn- clboy-btn" id="fullScreen-btn"
+        ng-click="viewModel()">{{isFullScreen?( 'exitView' | lang:'ui/other'):( 'view' | lang:'ui/other') }}</button>
     <input type="file" id="localFile" style="display: none;">
 </div>
 <!-- 新建时的提示 -->
