@@ -1,6 +1,6 @@
 /*!
  * ====================================================
- * kityminder-editor - v1.0.67 - 2020-01-10
+ * kityminder-editor - v1.0.67 - 2020-01-13
  * https://github.com/fex-team/kityminder-editor
  * GitHub: https://github.com/fex-team/kityminder-editor 
  * Copyright (c) 2020 ; Licensed 
@@ -2166,7 +2166,7 @@ angular.module('kityminderEditor').run(['$templateCache', function($templateCach
 
 
   $templateCache.put('ui/directive/other/other.html',
-    "<div class=\"other-btn\" dropdown is-open=\"isopen\" style=\"padding-top:16px\"><button type=\"button\" class=\"btn btn-sm btn-primary clboy-btn\" ng-click=\"minder.execCommand('ExpandToLevel', 9999)\">{{ 'expandAll' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-secondary clboy-btn\" ng-click=\"closeAll()\">{{ 'closeAll' | lang:'ui/other' }}</button><div class=\"btn-group\"><button type=\"button\" class=\"btn btn-sm btn-success dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{{ 'out' | lang:'ui/other' }}<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><li><a href=\"javascript:;\" ng-click=\"download('json','json')\">{{ 'downloadJSON' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('png','png')\">{{ 'downloadPng' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('text','txt')\">{{ 'downloadText' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('markdown','md')\">{{ 'downloadMarkdown' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('svg','svg')\">{{ 'downloadSvg' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('svg','html')\">{{ 'downloadHtml' | lang:'ui/other' }}</a></li></ul></div><div class=\"btn-group\"><button type=\"button\" class=\"btn btn-sm btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{{ 'in' | lang:'ui/other' }}<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><li><a href=\"javascript:;\" ng-click=\"loadData('local')\">{{ 'localData' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"loadData('remote')\">{{ 'remoteData' | lang:'ui/other' }}</a></li></ul></div><button type=\"button\" class=\"btn btn-sm btn-danger clboy-btn\" ng-click=\"createNewConfirm()\">{{ 'createNew' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-dark clboy-btn\" ng-click=\"closeTop()\">{{ 'closeTop' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-dark clboy-btn\" ng-disabled=\"minder.isReadonly\" ng-click=\"minder.readOnly()\">{{ 'readOnly' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-primary clboy-btn\" ng-disabled=\"!minder.isReadonly\" ng-click=\"minder.editable()\">{{ 'editable' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn- clboy-btn\" id=\"fullScreen-btn\" ng-click=\"viewModel()\">{{isFullScreen?( 'exitView' | lang:'ui/other'):( 'view' | lang:'ui/other') }}</button> <input type=\"file\" id=\"localFile\" style=\"display: none\"></div><div class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\" id=\"createNewModal\"><div class=\"modal-dialog modal-sm\" role=\"document\"><div class=\"modal-content\"><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><h5 class=\"modal-title\">新建提示</h5></div><div class=\"modal-body\" style=\"font-size:16px\">你是要丢弃当前数据吗？</div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">否</button> <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\" ng-click=\"createNew()\">是</button></div></div></div></div>"
+    "<div class=\"other-btn\" dropdown is-open=\"isopen\" style=\"padding-top:16px\"><button type=\"button\" class=\"btn btn-sm btn-primary clboy-btn\" ng-click=\"minder.execCommand('ExpandToLevel', 9999)\">{{ 'expandAll' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-secondary clboy-btn\" ng-click=\"closeAll()\">{{ 'closeAll' | lang:'ui/other' }}</button><div class=\"btn-group\"><button type=\"button\" class=\"btn btn-sm btn-success dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{{ 'out' | lang:'ui/other' }}<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><li><a href=\"javascript:;\" ng-click=\"download('json','json')\">{{ 'downloadJSON' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('png','png')\">{{ 'downloadPng' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('text','txt')\">{{ 'downloadText' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('markdown','md')\">{{ 'downloadMarkdown' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('svg','svg')\">{{ 'downloadSvg' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"download('svg','html')\">{{ 'downloadHtml' | lang:'ui/other' }}</a></li></ul></div><div class=\"btn-group\"><button type=\"button\" class=\"btn btn-sm btn-warning dropdown-toggle\" data-toggle=\"dropdown\" aria-haspopup=\"true\" aria-expanded=\"false\">{{ 'in' | lang:'ui/other' }}<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><li><a href=\"javascript:;\" ng-click=\"loadData('local')\">{{ 'localData' | lang:'ui/other' }}</a></li><li><a href=\"javascript:;\" ng-click=\"loadData('remote')\">{{ 'remoteData' | lang:'ui/other' }}</a></li></ul></div><button type=\"button\" class=\"btn btn-sm btn-danger clboy-btn\" ng-click=\"createNewConfirm()\">{{ 'createNew' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-dark clboy-btn\" ng-click=\"closeTop()\">{{ 'closeTop' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-dark clboy-btn\" ng-disabled=\"minder.isReadonly\" ng-click=\"minder.readOnly()\">{{ 'readOnly' | lang:'ui/other' }}</button> <button type=\"button\" class=\"btn btn-sm btn-primary clboy-btn\" ng-disabled=\"!minder.isReadonly\" ng-click=\"minder.editable()\">{{ 'editable' | lang:'ui/other' }}</button><div class=\"btn-group\" ng-show=\"minder.isRemote\"><button class=\"btn btn-sm dropdown-toggle\" data-toggle=\"dropdown\">{{currentFontSize||'字号'}}<span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><li ng-repeat=\"f in fontSizeList\"><a href=\"#\" ng-style=\"{'font-size': f + 'px'}\" ng-click=\"changeFontSize(f)\">{{f}}</a></li></ul></div><button type=\"button\" class=\"btn btn-sm btn- clboy-btn\" id=\"fullScreen-btn\" ng-click=\"viewModel()\">{{isFullScreen?( 'exitView' | lang:'ui/other'):( 'view' | lang:'ui/other') }}</button> <input type=\"file\" id=\"localFile\" style=\"display: none\"></div><div class=\"modal fade\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\" id=\"createNewModal\"><div class=\"modal-dialog modal-sm\" role=\"document\"><div class=\"modal-content\"><div class=\"modal-header\"><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button><h5 class=\"modal-title\">新建提示</h5></div><div class=\"modal-body\" style=\"font-size:16px\">你是要丢弃当前数据吗？</div><div class=\"modal-footer\"><button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\">否</button> <button type=\"button\" class=\"btn btn-danger\" data-dismiss=\"modal\" ng-click=\"createNew()\">是</button></div></div></div></div>"
   );
 
 
@@ -4144,6 +4144,7 @@ angular.module('kityminderEditor')
                 minder.otherScope = scope;
                 scope.downLink = $('<a class="hidden" id="downLink"></a>')[0];
                 scope.isFullScreen = false;
+                scope.fontSizeList = [10, 12, 16, 18, 24, 32, 48];
                 $(document.body).append(scope.downLink);
                 function fullScreen(element) {
                     if (element.requestFullscreen) {
@@ -4184,11 +4185,10 @@ angular.module('kityminderEditor')
                         fullScreen(document.documentElement);
                         minder.readOnly();
                         this.closeTop();
-                        minder.execCommand('hand');
+                        minder.getStatus() != 'hand' && minder.execCommand('hand');
                     }
                 };
                 scope.download = function (fm, ext) {
-
                     editor.minder.exportData(fm).then(function (data) {
                         var fileName = minder.getRoot().data.text;
                         var blob;
@@ -4267,7 +4267,19 @@ angular.module('kityminderEditor')
                 };
                 scope.createNewConfirm = function () {
                     $('#createNewModal').modal('show');
-                }
+                };
+                scope.changeFontSize = function (size) {
+                    if (minder.isRemote) {
+                        minder.enable();
+                        var tempScope = $('.select').scope();
+                        tempScope.select['all']();
+                        minder.execCommand('fontsize', size);
+                        tempScope.select['revert']();
+                        minder.disable();
+                        minder.execCommand('hand');
+                        scope.currentFontSize = size + "px";
+                    }
+                };
 
                 function downloadFile(fileName, blob) {
                     scope.downLink.download = fileName;

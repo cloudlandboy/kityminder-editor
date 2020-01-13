@@ -10,6 +10,7 @@ angular.module('kityminderEditor')
                 minder.otherScope = scope;
                 scope.downLink = $('<a class="hidden" id="downLink"></a>')[0];
                 scope.isFullScreen = false;
+                scope.fontSizeList = [10, 12, 16, 18, 24, 32, 48];
                 $(document.body).append(scope.downLink);
                 function fullScreen(element) {
                     if (element.requestFullscreen) {
@@ -50,11 +51,10 @@ angular.module('kityminderEditor')
                         fullScreen(document.documentElement);
                         minder.readOnly();
                         this.closeTop();
-                        minder.execCommand('hand');
+                        minder.getStatus() != 'hand' && minder.execCommand('hand');
                     }
                 };
                 scope.download = function (fm, ext) {
-
                     editor.minder.exportData(fm).then(function (data) {
                         var fileName = minder.getRoot().data.text;
                         var blob;
@@ -133,7 +133,19 @@ angular.module('kityminderEditor')
                 };
                 scope.createNewConfirm = function () {
                     $('#createNewModal').modal('show');
-                }
+                };
+                scope.changeFontSize = function (size) {
+                    if (minder.isRemote) {
+                        minder.enable();
+                        var tempScope = $('.select').scope();
+                        tempScope.select['all']();
+                        minder.execCommand('fontsize', size);
+                        tempScope.select['revert']();
+                        minder.disable();
+                        minder.execCommand('hand');
+                        scope.currentFontSize = size + "px";
+                    }
+                };
 
                 function downloadFile(fileName, blob) {
                     scope.downLink.download = fileName;

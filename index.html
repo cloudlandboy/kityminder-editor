@@ -185,18 +185,34 @@
                     if (!/^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/.test(link)) {
                         link = minder.remoteLink + link + ".json";
                     }
-                    $.getJSON(link, function (data) {
-                        $('#initRemoteModal').modal('show');
-                        $('#initRemote').one('click', function () {
-                            $('#initRemoteModal').modal('hide');
-                            try {
-                                minder.importJson(data)
-                                minder.otherScope.viewModel();
-                                minder.isRemote = true;
-                            } catch (e) {
-                                toastr.error("出错了，不兼容的json格式！");
-                            }
-                        })
+                    toastr.info('加载数据中......', '请稍后', {
+                        "positionClass": "toast-top-full-width",
+                        "closeButton": false,
+                        "closeMethod": 'show',
+                        "timeOut": 0,
+                        "extendedTimeOut": 0,
+                    });
+                    $.ajax(link, {
+                        dataType: 'json',
+                        success: function (data) {
+                            toastr.remove();
+                            $('#initRemoteModal').modal('show');
+                            $('#initRemote').one('click', function () {
+                                $('#initRemoteModal').modal('hide');
+                                try {
+                                    minder.importJson(data)
+                                    minder.otherScope.viewModel();
+                                    minder.isRemote = true;
+                                } catch (e) {
+                                    toastr.error("出错了，不兼容的json格式！");
+                                }
+                            })
+                        },
+                        error: function () {
+                            toastr.remove();
+                            $('#loading').modal('hide')
+                            toastr.error("啊偶！没有请求到数据，请检测请求路径是否正确！");
+                        },
                     })
                 }
             };

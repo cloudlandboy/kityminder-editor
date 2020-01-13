@@ -39,6 +39,15 @@
     <button type="button" class="btn btn-sm btn-primary clboy-btn" ng-disabled="!minder.isReadonly"
         ng-click="minder.editable()">{{ 'editable' | lang:'ui/other' }}</button>
 
+    <div class="btn-group" ng-show="minder.isRemote">
+        <button class="btn btn-sm dropdown-toggle" data-toggle="dropdown">{{currentFontSize||'字号'}}<span
+                class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li ng-repeat="f in fontSizeList"><a href="#" ng-style="{'font-size': f + 'px'}"
+                    ng-click="changeFontSize(f)">{{f}}</a></li>
+        </ul>
+    </div>
+
     <button type="button" class="btn btn-sm btn- clboy-btn" id="fullScreen-btn"
         ng-click="viewModel()">{{isFullScreen?( 'exitView' | lang:'ui/other'):( 'view' | lang:'ui/other') }}</button>
     <input type="file" id="localFile" style="display: none;">
